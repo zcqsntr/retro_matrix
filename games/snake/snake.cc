@@ -14,8 +14,18 @@
 #include <signal.h>
 #include <stdlib.h> 
 #include <iostream>
-#include <ncurses.h>
 #include <deque> 
+
+
+#include <string.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <assert.h>
+#include <linux/input.h>
+#include <cstdlib>
+#include "libevdev.h"
 
 using rgb_matrix::GPIO;
 using rgb_matrix::RGBMatrix;
@@ -50,8 +60,41 @@ int random(int min, int max) //range : [min, max)
       srand( time(NULL) ); //seeding for the first time only!
       first = false;
    }
+
    return min + rand() % (( max + 1 ) - min);
 }
+
+Point spawn_food(deque<Point> snake, int rows, int cols){
+  // spawns food that isnt inside the snake 
+  
+  
+  
+  
+  while(true){
+    bool food_in_snake = false;
+    int row = random(0, rows -1);
+    int col = random(0, cols -1);
+    
+    for(int i = 0; i < snake.size(); i++){
+      if(row == snake[i].row && col == snake[i].col) {
+        food_in_snake = true;
+        row = random(0, rows -1);
+        col = random(0, cols -1);
+        break;
+      }
+      
+      
+    }
+ 
+    
+    if(!food_in_snake){
+      return Point{row, col};
+    }
+  }
+  
+}
+
+//TODO: bug where food disapears if it spawns inside snake 
 
 static void DrawOnCanvas(Canvas *canvas) {
   /*
@@ -75,21 +118,46 @@ static void DrawOnCanvas(Canvas *canvas) {
   }
   * */
   
-  initscr();
-  nodelay(stdscr, TRUE);
-  noecho(); 
-  cbreak();
+  struct libevdev *dev = NULL;
+  int fd;
+  int rc = 1;
+  // ps4 controller "/dev/input/event6",
+  fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
+  rc = libevdev_new_from_fd(fd, &dev);
+  if (rc < 0) {
+          fprintf(stderr, "Failed to init libevdev (%s)\n", strerror(-rc));
+          exit(1);
+  }
+  printf("Input device name: \"%s\"\n", libevdev_get_name(dev));
+  printf("Input device ID: bus %#x vendor %#x product %#x\n",
+         libevdev_get_id_bustype(dev),
+         libevdev_get_id_vendor(dev),
+         libevdev_get_id_product(dev));
+         
+         
+  // filter out the constant events that flood the queue
+  /*
+  libevdev_disable_event_code	(dev, EV_ABS, ABS_X);
+  libevdev_disable_event_code	(dev, EV_ABS, ABS_Y);
+  libevdev_disable_event_code	(dev, EV_ABS, ABS_RX);
+  libevdev_disable_event_code	(dev, EV_ABS, ABS_RY);
+  * */
+         
   
+
   deque<Point> snake{Point{3,6}, Point{3,5}, Point{3,4}, Point{3,3}, Point{3,2}, Point{3,1}, Point{3,0}};
   // snake is dequeue where the front of the queue is the head and the back fo the queue if the tail
   
-  Point food{random(0, 31), random(0, 63)};
+  Point food = spawn_food(snake, 32, 64);
+  SetPixel(canvas, food.row, food.col, 0, 255, 0);
+  cout << food.row << " " << food.col<< endl;
+ 
   
   int score = 0;
   int t = 100000;
-  int ch = 'd';
+
   int dir = 'r';
-  int c;
+  
   Point new_head;
   Point back;
   
@@ -102,37 +170,36 @@ static void DrawOnCanvas(Canvas *canvas) {
             
   }
   
-  SetPixel(canvas, food.row, food.col, 0, 255, 0);
   
   
+  int pos = 0;
   while (true){
      
     
     
-    if(!((c = getch()) == ERR)){ // if keyboard has been pressed 
-      ch = c;
-    }
-    
-    
-    
-    switch(ch)
-        {
-          case 'a':
-            dir = 'l';
-            break;
-          case 'w':
-            dir = 'u';
-            break;
-            
-          case 'd':
-            
-            dir = 'r'; 
-            break;
-          case 's':
-            dir = 'd';
-            break;
-            
+    struct input_event ev;
+    rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
+    while(rc == 0) { // get all events since last iteration of game loop 
+      
+      
+      
+                             
+                        
+      if (rc == 0) {
+        if (string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_HAT0Y") && ev.value == -1 && dir != 'r') {
+          dir = 'l';
+        } else if (string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_HAT0Y") && ev.value == 1&& dir != 'l') {
+          dir = 'r';
+        } else if (string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_HAT0X") && ev.value == 1&& dir != 'u') {
+          dir = 'd';
+        } else if (string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_HAT0X") && ev.value == -1&& dir != 'd') {
+          dir = 'u';
         }
+      }  
+      rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev);  
+    }
+      
+
     
     
     
@@ -189,8 +256,7 @@ static void DrawOnCanvas(Canvas *canvas) {
         t*= 0.9;
       }
       SetPixel(canvas, food.row, food.col, 0, 0, 255);
-      food.row = random(0,31);
-      food.col = random(0,63);
+      food = spawn_food(snake, 32, 64);
       SetPixel(canvas, food.row, food.col, 0, 255, 0);
       
     } else {
