@@ -6,6 +6,9 @@
 // (but note, that the led-matrix library this depends on is GPL v2)
 
 #include "led-matrix.h"
+#include "graphics.h"
+
+#include <getopt.h>
 #include <string>
 
 #include <unistd.h>
@@ -14,8 +17,8 @@
 #include <signal.h>
 #include <stdlib.h> 
 #include <iostream>
-#include <deque> 
-
+#include <vector> 
+#include <deque>
 
 #include <string.h>
 #include <errno.h>
@@ -30,6 +33,9 @@
 using rgb_matrix::GPIO;
 using rgb_matrix::RGBMatrix;
 using rgb_matrix::Canvas;
+using rgb_matrix::Font;
+
+using rgb_matrix::Color;
 
 using namespace std;
 
@@ -387,6 +393,14 @@ static void DrawTwoPlayer(Canvas *canvas) {
             
   }
   
+  Color win_text_color(255,255,255);
+  Color bg_color(0, 0, 0);
+  int letter_spacing = 0;
+  rgb_matrix::Font font;
+  if (!font.LoadFont("/home/pi/Desktop/LED_matrix/rpi-rgb-led-matrix/fonts/4x6.bdf")) {
+    fprintf(stderr, "Couldn't load font \n");
+  
+  }
   
   
   //int pos = 0;
@@ -566,7 +580,9 @@ static void DrawTwoPlayer(Canvas *canvas) {
     //player 1
     for(int s = 1; s<snake.size(); s++){
       if(new_head.row==snake[s].row && new_head.col == snake[s].col) {
-        cout<<"Player 2 wins!"<<endl;
+        rgb_matrix::DrawText(canvas, font, 15, 20,
+                           win_text_color, &bg_color, "RED WINS!",
+                           letter_spacing);
         usleep(50 * t);
         
         exit(0);
@@ -574,7 +590,9 @@ static void DrawTwoPlayer(Canvas *canvas) {
       
       
       if(new_head1.row==snake[s].row && new_head1.col == snake[s].col) {
-        cout<<"Player 1 wins!"<<endl;
+        rgb_matrix::DrawText(canvas, font, 15, 20,
+                           win_text_color, &bg_color, "BLUE WINS!",
+                           letter_spacing);
         usleep(50 * t);
         
         exit(0);
@@ -587,14 +605,18 @@ static void DrawTwoPlayer(Canvas *canvas) {
     //player 2
     for(int s = 1; s<snake1.size(); s++){
       if(new_head1.row==snake1[s].row && new_head1.col == snake1[s].col) {
-        cout<<"Player 1 wins!"<<endl;
+        rgb_matrix::DrawText(canvas, font, 15, 20,
+                           win_text_color, &bg_color, "RED WINS!",
+                           letter_spacing);
         usleep(50 * t);
         
         exit(0);
       
     }
       if(new_head.row==snake1[s].row && new_head.col == snake1[s].col) {
-        cout<<"Player 2 wins!"<<endl;
+        rgb_matrix::DrawText(canvas, font, 15, 20,
+                           win_text_color, &bg_color, "BLUE WINS!",
+                           letter_spacing);
         usleep(50 * t);
         
         exit(0);
