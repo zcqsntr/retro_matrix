@@ -158,7 +158,7 @@ static void SetPixels(Canvas *canvas, int LED_matrix[32][64], int n_rows = 32, i
         
         if (LED_matrix[i][j] == 1){
           
-          SetPixel(canvas, i, j, 0, 0, 255);
+          SetPixel(canvas, i, j, 255, 255, 0);
           
         } else {
           SetPixel(canvas, i, j, 0, 0, 0);
@@ -353,7 +353,7 @@ static void DrawOnCanvas(Canvas *canvas) {
   
   //MakeBlinker(LED_matrix, 10, 10);
   //MakeBlock(LED_matrix, 0, 0);
-  
+  //cout << "hello" << endl;
   //MakeGliderGun(LED_matrix, 0, 0,0); 
   
   //MakeBlinker(LED_matrix, 5, 5);
@@ -361,7 +361,7 @@ static void DrawOnCanvas(Canvas *canvas) {
  
   int t = 0;
   
-  while (t < 500){
+  while (t < 1000){
     
   
     SetPixels(canvas, LED_matrix);

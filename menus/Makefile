@@ -19,26 +19,32 @@ EVDEV_LIBDIR=/usr/local/lib
 EVDEV_LIBRARY_NAME=evdev
 EVDEV_LIBRARY=$(EVDEV_LIBDIR)/lib$(EVDEV_LIBRARY_NAME).a
 
-MY_INCDIR = /home/pi/Desktop/retro_matrix
+LDFLAGS+= -L$(EVDEV_LIBDIR) -l$(EVDEV_LIBRARY_NAME) 
 
+MY_INCDIR = /home/pi/Desktop/retro_matrix/lib
+MY_LIB = retromatrix
 
-LDFLAGS+=-L$(RGB_LIBDIR) -l$(RGB_LIBRARY_NAME) -L$(EVDEV_LIBDIR) -l$(EVDEV_LIBRARY_NAME) -lrt -lm -lpthread 
+LDFLAGS+= -L$(MY_INCDIR) -l$(MY_LIB) 
 
+SNAKE_DIR = /home/pi/Desktop/retro_matrix/games/snake
 
 all : main_menu
 
 $(RGB_LIBRARY): FORCE
 	$(MAKE) -C $(RGB_LIBDIR)
 
-main_menu: main_menu.o $(MY_INCDIR)/include.o $(RGB_LIBRARY) $(EVDEV_LIBRARY)
-	$(CXX) $< -o $@ $(LDFLAGS) 
+main_menu: main_menu.o games_menu.o snake_menu.o $(RGB_LIBRARY) $(EVDEV_LIBRARY)
+	$(CXX) main_menu.o games_menu.o snake_menu.o $(SNAKE_DIR)/snake.o -o $@ $(LDFLAGS) 
 	
-main_menu.o: main_menu.cc $(MY_INCDIR)/include.h
-	$(CXX) -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -c main_menu.cc
+main_menu.o: main_menu.cc 
+	$(CXX) -o main_menu.o -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -c main_menu.cc
 	
 
+games_menu.o: games_menu.cc 
+	$(CXX) -o games_menu.o -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -c games_menu.cc
 
-
+snake_menu.o: snake_menu.cc 
+	$(CXX) -o snake_menu.o -I$(SNAKE_DIR) -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -c snake_menu.cc
 
 
 clean:

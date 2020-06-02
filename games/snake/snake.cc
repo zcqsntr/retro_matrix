@@ -7,7 +7,8 @@
 
 #include "led-matrix.h"
 #include "graphics.h"
-
+#include "mylib.h"
+#include "snake.h"
 #include <getopt.h>
 #include <string>
 
@@ -47,28 +48,6 @@ static void InterruptHandler(int signo) {
 }
 * */
 
-static void SetPixel(Canvas *canvas, int row, int col, uint8_t red, uint8_t green, uint8_t blue) { // swpas x and y so indexing is matrix 
-  
-  canvas->SetPixel(col, row, red, green, blue);
-}
-
-struct Point {
-  int row, col;
-};
-
-
-
-int random(int min, int max) //range : [min, max)
-{
-   static bool first = true;
-   if (first) 
-   {  
-      srand( time(NULL) ); //seeding for the first time only!
-      first = false;
-   }
-
-   return min + rand() % (( max + 1 ) - min);
-}
 
 Point spawn_food(deque<Point> snake, int rows, int cols){
   // spawns food that isnt inside the snake 
@@ -606,7 +585,7 @@ static void DrawTwoPlayer(Canvas *canvas) {
     for(int s = 1; s<snake1.size(); s++){
       if(new_head1.row==snake1[s].row && new_head1.col == snake1[s].col) {
         rgb_matrix::DrawText(canvas, font, 15, 20,
-                           win_text_color, &bg_color, "RED WINS!",
+                           win_text_color, &bg_color, "BLUE WINS!",
                            letter_spacing);
         usleep(50 * t);
         
@@ -615,7 +594,7 @@ static void DrawTwoPlayer(Canvas *canvas) {
     }
       if(new_head.row==snake1[s].row && new_head.col == snake1[s].col) {
         rgb_matrix::DrawText(canvas, font, 15, 20,
-                           win_text_color, &bg_color, "BLUE WINS!",
+                           win_text_color, &bg_color, "RED WINS!",
                            letter_spacing);
         usleep(50 * t);
         
@@ -628,18 +607,8 @@ static void DrawTwoPlayer(Canvas *canvas) {
 }
 }
 
-int main(int argc, char *argv[]) {
-  RGBMatrix::Options defaults;
-  defaults.hardware_mapping = "adafruit-hat";  // or e.g. "adafruit-hat"
-  defaults.rows = 32;
-  defaults.cols = 64;
-  defaults.chain_length = 1;
-  defaults.parallel = 1;
-  defaults.show_refresh_rate = false;
+int run_snake(Canvas *canvas, int n_players) {
   
-  // use --led-slowdown-gpio=4
-
-  Canvas *canvas = rgb_matrix::CreateMatrixFromFlags(&argc, &argv, &defaults);
   if (canvas == NULL)
     return 1;
 
@@ -648,7 +617,7 @@ int main(int argc, char *argv[]) {
   // for that.
   //signal(SIGTERM, InterruptHandler);
   //signal(SIGINT, InterruptHandler);
-  int n_players = 2;
+  
   
   if(n_players == 1){
     DrawOnePlayer(canvas);
