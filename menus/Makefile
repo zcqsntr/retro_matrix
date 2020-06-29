@@ -10,8 +10,7 @@ RGB_LIB_DISTRIBUTION=/home/pi/Desktop/LED_matrix/rpi-rgb-led-matrix
 RGB_INCDIR=$(RGB_LIB_DISTRIBUTION)/include
 RGB_LIBDIR=$(RGB_LIB_DISTRIBUTION)/lib
 RGB_LIBRARY_NAME=rgbmatrix
-RGB_LIBRARY=$(RGB_LIBDIR)/lib$(RGB_LIBRARY_NAME).a
-LDFLAGS+=-L$(RGB_LIBDIR) -l$(RGB_LIBRARY_NAME) -lrt -lm -lpthread
+
 
 EVDEV_LIB_DISTRIBUTION=/usr/local
 EVDEV_INCDIR=/usr/local/include/libevdev-1.0/libevdev
@@ -19,33 +18,61 @@ EVDEV_LIBDIR=/usr/local/lib
 EVDEV_LIBRARY_NAME=evdev
 EVDEV_LIBRARY=$(EVDEV_LIBDIR)/lib$(EVDEV_LIBRARY_NAME).a
 
-LDFLAGS+= -L$(EVDEV_LIBDIR) -l$(EVDEV_LIBRARY_NAME) 
+
 
 MY_INCDIR = /home/pi/Desktop/retro_matrix/lib
 MY_LIB = retromatrix
 
 LDFLAGS+= -L$(MY_INCDIR) -l$(MY_LIB) 
+LDFLAGS+=-L$(RGB_LIBDIR) -l$(RGB_LIBRARY_NAME) -lrt -lm -lpthread
+LDFLAGS+= -L$(EVDEV_LIBDIR) -l$(EVDEV_LIBRARY_NAME) 
+
 
 SNAKE_DIR = /home/pi/Desktop/retro_matrix/games/snake
+TETRIS_DIR = /home/pi/Desktop/retro_matrix/games/tetris
+
+GOL_DIR = /home/pi/Desktop/retro_matrix/cellular_automata/game_of_life
+R30_DIR = /home/pi/Desktop/retro_matrix/cellular_automata/rule30
+ANT_DIR = /home/pi/Desktop/retro_matrix/cellular_automata/langtons_ant
 
 all : main_menu
 
 $(RGB_LIBRARY): FORCE
 	$(MAKE) -C $(RGB_LIBDIR)
 
-main_menu: main_menu.o games_menu.o snake_menu.o $(RGB_LIBRARY) $(EVDEV_LIBRARY)
-	$(CXX) main_menu.o games_menu.o snake_menu.o $(SNAKE_DIR)/snake.o -o $@ $(LDFLAGS) 
+main_menu: main_menu.o start_menu.o cellular_automata_menu.o games_menu.o snake_menu.o snake.o tetris.o game_of_life.o rule_30.o ant.o $(RGB_LIBRARY) $(EVDEV_LIBRARY)
+	$(CXX) main_menu.o start_menu.o cellular_automata_menu.o games_menu.o snake_menu.o game_of_life.o snake.o tetris.o rule_30.o ant.o -o $@ $(LDFLAGS) 
 	
 main_menu.o: main_menu.cc 
-	$(CXX) -o main_menu.o -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -c main_menu.cc
+	$(CXX) -o main_menu.o -I$(GOL_DIR) -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -c main_menu.cc
 	
-
 games_menu.o: games_menu.cc 
-	$(CXX) -o games_menu.o -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -c games_menu.cc
+	$(CXX) -o games_menu.o -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) -I$(TETRIS_DIR) $(CXXFLAGS) $(LDLIBS) -c games_menu.cc
+	
+start_menu.o: start_menu.cc 
+	$(CXX) -o start_menu.o -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -c start_menu.cc
 
 snake_menu.o: snake_menu.cc 
 	$(CXX) -o snake_menu.o -I$(SNAKE_DIR) -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -c snake_menu.cc
+	
+cellular_automata_menu.o: cellular_automata_menu.cc
+	$(CXX) -o cellular_automata_menu.o -I$(ANT_DIR) -I$(R30_DIR) -I$(GOL_DIR) -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -c cellular_automata_menu.cc
 
+snake.o: $(SNAKE_DIR)/snake.cc 
+	$(CXX) -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS)  -c $(SNAKE_DIR)/snake.cc
+	
+tetris.o: $(TETRIS_DIR)/tetris.cc 
+	$(CXX) -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS)  -c $(TETRIS_DIR)/tetris.cc
+	
+game_of_life.o: $(GOL_DIR)/game_of_life.cc 
+	$(CXX) -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) -c $(GOL_DIR)/game_of_life.cc
+
+ant.o: $(ANT_DIR)/ant.cc 
+	$(CXX) -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) -c $(ANT_DIR)/ant.cc
+	
+	
+rule_30.o: $(R30_DIR)/rule_30.cc 
+	$(CXX) -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) -c $(R30_DIR)/rule_30.cc
 
 clean:
 	rm -f $(OBJECTS) $(BINARIES)

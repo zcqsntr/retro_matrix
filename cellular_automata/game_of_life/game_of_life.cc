@@ -5,7 +5,12 @@
 // This code is public domain
 // (but note, that the led-matrix library this depends on is GPL v2)
 
+#include "start_menu.h"
 #include "led-matrix.h"
+#include "graphics.h"
+#include "mylib.h"
+
+#include <getopt.h>
 #include <string>
 
 #include <unistd.h>
@@ -14,6 +19,19 @@
 #include <signal.h>
 #include <stdlib.h> 
 #include <iostream>
+#include <vector> 
+#include <deque>
+
+#include <string.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <assert.h>
+#include <linux/input.h>
+#include <cstdlib>
+#include "libevdev.h"
+#include <fstream>
 
 using rgb_matrix::GPIO;
 using rgb_matrix::RGBMatrix;
@@ -29,12 +47,7 @@ static void InterruptHandler(int signo) {
 }
 */
 
-static void SetPixel(Canvas *canvas, int row, int col, uint8_t red, uint8_t green, uint8_t blue) { // swpas x and y so indexing is matrix 
-  
-  canvas->SetPixel(col, row, red, green, blue);
-}
-
-static void RandomICs(int LED_matrix[32][64], float density, int n_rows = 32, int n_cols = 64) {
+void RandomICs2D(int LED_matrix[32][64], float density, int n_rows = 32, int n_cols = 64) {
   
   // initial conditions
   for (int i = 0; i < n_rows; i++) { // for each row
@@ -52,7 +65,8 @@ static void RandomICs(int LED_matrix[32][64], float density, int n_rows = 32, in
   
 }
 
-static void GOLUpdate(int LED_matrix[32][64], string boundary_conditions = "looping", int n_rows = 32, int n_cols = 64) {
+
+void GOLUpdate(int LED_matrix[32][64], string boundary_conditions = "looping", int n_rows = 32, int n_cols = 64) {
   
   // first do middle area of array insulating effects 
   
@@ -151,25 +165,7 @@ static void GOLUpdate(int LED_matrix[32][64], string boundary_conditions = "loop
   
 }
 
-static void SetPixels(Canvas *canvas, int LED_matrix[32][64], int n_rows = 32, int n_cols = 64) {
-  
-    for (int i = 0; i < n_rows; i++) { // for each row
-      for (int j = 0; j < n_cols; j++) { // for each column
-        
-        if (LED_matrix[i][j] == 1){
-          
-          SetPixel(canvas, i, j, 255, 255, 0);
-          
-        } else {
-          SetPixel(canvas, i, j, 0, 0, 0);
-        }
-        
-    }
-  }
-  
-}
-
-static void MakeGliderGun(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0, int direction = 0) {
+void MakeGliderGun(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0, int direction = 0) {
   
   // loc is top left point of glider 
   
@@ -225,7 +221,7 @@ static void MakeGliderGun(int LED_matrix[32][64],  int row_loc= 0, int col_loc =
   
 }
 
-static void MakeGlider(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0, int direction = 0) {
+void MakeGlider(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0, int direction = 0) {
   
   // loc is top left point of glider 
   
@@ -275,7 +271,7 @@ static void MakeGlider(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0,
   
 }
 
-static void MakeBlock(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0) {
+void MakeBlock(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0) {
   
   // loc is top left point of glider 
   
@@ -295,7 +291,7 @@ static void MakeBlock(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0) 
   
 }
 
-static void MakeBlinker(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0) {
+void MakeBlinker(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0) {
   
   // loc is top left point of glider 
   
@@ -315,7 +311,7 @@ static void MakeBlinker(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0
   
 }
 
-static void DrawOnCanvas(Canvas *canvas) {
+static void DrawGOLOnCanvas(Canvas *canvas) {
   /*
    * Let's create a simple animation. We use the canvas to draw
    * pixels. We wait between each step to have a slower animation.
@@ -336,12 +332,40 @@ static void DrawOnCanvas(Canvas *canvas) {
     usleep(1 * 1000);  // wait a little to slow down things.
   }
   * */
+  struct libevdev *dev = NULL;
+
+  int fd;
+  int rc = 1;
+  // ps4 controller "/dev/input/event6",
+  fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
+  rc = libevdev_new_from_fd(fd, &dev);
+  if (rc < 0) {
+          fprintf(stderr, "Failed to init libevdev (%s)\n", strerror(-rc));
+          exit(1);
+  }
+  printf("Input device name: \"%s\"\n", libevdev_get_name(dev));
+  printf("Input device ID: bus %#x vendor %#x product %#x\n",
+         libevdev_get_id_bustype(dev),
+         libevdev_get_id_vendor(dev),
+         libevdev_get_id_product(dev));
+  
+  
+         
+         
+  // filter out the constant events that flood the queue
+  
+  libevdev_disable_event_code	(dev, EV_ABS, ABS_X);
+  libevdev_disable_event_code	(dev, EV_ABS, ABS_Y);
+  libevdev_disable_event_code	(dev, EV_ABS, ABS_RX);
+  libevdev_disable_event_code	(dev, EV_ABS, ABS_RY);
   
   
   
+  
+  Color pixel_color(0, 0, 255);
   int LED_matrix[32][64] = {0};
   
-  RandomICs(LED_matrix, 0.2);
+  RandomICs2D(LED_matrix, 0.2);
   
   // four gliders in the corners of a square
   
@@ -360,11 +384,25 @@ static void DrawOnCanvas(Canvas *canvas) {
   
  
   int t = 0;
-  
-  while (t < 1000){
+  int n_rows = 32;
+  int n_cols = 64;
+  while (t < 500){
+    
+    list <ControllerInput> inputs = get_inputs_from_ps4(dev);
+      
+      for(const auto &input: inputs){
+   
+        switch(input.type) {  // go from first input as unlikely to have multiple inputs perframes with no sleep
+          case 'p':
+            int quit = start_menu(canvas);
+            if(quit) {
+              return;
+            }
+        }
+      }
     
   
-    SetPixels(canvas, LED_matrix);
+    SetPixels(canvas, LED_matrix, pixel_color, n_rows, n_cols);
      
     GOLUpdate(LED_matrix);
     usleep(1 * 50000);
@@ -380,18 +418,8 @@ static void DrawOnCanvas(Canvas *canvas) {
   
 
 
-int main(int argc, char *argv[]) {
-  RGBMatrix::Options defaults;
-  defaults.hardware_mapping = "adafruit-hat";  // or e.g. "adafruit-hat"
-  defaults.rows = 32;
-  defaults.cols = 64;
-  defaults.chain_length = 1;
-  defaults.parallel = 1;
-  defaults.show_refresh_rate = false;
-  
-  // use --led-slowdown-gpio=4
-
-  Canvas *canvas = rgb_matrix::CreateMatrixFromFlags(&argc, &argv, &defaults);
+int run_GOL(Canvas *canvas) {
+ 
   if (canvas == NULL)
     return 1;
 
@@ -401,11 +429,9 @@ int main(int argc, char *argv[]) {
   //signal(SIGTERM, InterruptHandler);
   //signal(SIGINT, InterruptHandler);
 
-  DrawOnCanvas(canvas);    // Using the canvas.
-
-  // Animation finished. Shut down the RGB matrix.
-  canvas->Clear();
-  delete canvas;
+  DrawGOLOnCanvas(canvas);    // Using the canvas.
+  
+  
 
   return 0;
 }

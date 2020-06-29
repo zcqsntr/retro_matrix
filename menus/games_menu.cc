@@ -2,6 +2,7 @@
 #include "led-matrix.h"
 #include "graphics.h"
 #include "snake_menu.h"
+#include "tetris.h"
 
 #include "mylib.h"
 #include <getopt.h>
@@ -25,6 +26,7 @@
 #include <linux/input.h>
 #include <cstdlib>
 #include "libevdev.h"
+
 using rgb_matrix::Font;
 using rgb_matrix::Canvas;
 using rgb_matrix::RGBMatrix;
@@ -60,7 +62,7 @@ static void DrawGamesCanvas(Canvas *canvas) {
   struct libevdev *dev = NULL;
   int fd;
   int rc = 1;
-  int dir = 0;
+
   int current_selected = 0;
   // ps4 controller "/dev/input/event6",
   fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
@@ -92,12 +94,11 @@ static void DrawGamesCanvas(Canvas *canvas) {
   }
   
   // make buttons 
-  Button games_button{Point{2,2}, "SNAKE", true};
-  Button GOL_button{Point{25,2}, "404 NOT FOUND", false};
+  Button snake_button{Point{2,2}, "SNAKE", true};
+  Button tetris_button{Point{25,2}, "TETRIS", false};
   
-  vector<Button> buttons{games_button, GOL_button};
+  vector<Button> buttons{snake_button, tetris_button};
   
-  int letter_spacing = 0;
 
   
   Color bg_color(0, 0, 0);
@@ -105,92 +106,57 @@ static void DrawGamesCanvas(Canvas *canvas) {
   Color dim_color(70, 0, 150);
   Color highlight_color(255,255,255);
   ResetCanvas(canvas, 32, 64, bg_color);
-  
-  
+  int selected_button = get_selected_button(buttons);
+  list <ControllerInput> inputs;
+  draw_buttons(canvas, buttons, font, bright_color, dim_color);
   while(true){
-    for(int i = 0; i < buttons.size(); i++) {
-     
-      //draw_text(canvas, font, buttons[i].position.row + font.baseline(), buttons[i].position.col,
-                             //color, bg_color, buttons[i].text,
-                             //letter_spacing);
-                             
-     
-      if(buttons[i].is_selected){
-        // border
-        //DrawRect(canvas, buttons[i].position.row -1, buttons[i].position.col -1, 6, 20, highlight_color);
-        rgb_matrix::DrawText(canvas, font, buttons[i].position.col, buttons[i].position.row + font.baseline(), bright_color, &bg_color, buttons[i].text, letter_spacing);
-      } else {
-        //DrawRect(canvas, buttons[i].position.row -1, buttons[i].position.col -1, 6, 20, bg_color);
-        rgb_matrix::DrawText(canvas, font, buttons[i].position.col, buttons[i].position.row + font.baseline(), dim_color, &bg_color, buttons[i].text, letter_spacing);
-      }
-    }
+    
       
+      inputs = get_inputs_from_ps4(dev);
+      
+      for(const auto &input: inputs){
+        switch(input.type) {  // go from first input as unlikely to have multiple inputs perframes with no sleep
 
-        
-      struct input_event ev;
-      rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
-      while(rc == 0) { // get all events since last iteration of game loop 
-        if (rc == 0) {
-          
-          if (string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_HAT0Y") == 0 && ev.value == 1) {
-            dir = 'd';
+          case 'y':
+            change_selected_button(buttons, input.value, current_selected);
+            draw_buttons(canvas, buttons, font, bright_color, dim_color);
+            break;
             
-          } else if (string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_HAT0Y") == 0 && ev.value == -1) {
-            dir = 'u';
-          } else if (string(libevdev_event_code_get_name(ev.type, ev.code)).compare("BTN_EAST") == 0 && ev.value == 1) {
-            
-            return;
-            
-          } else if (string(libevdev_event_code_get_name(ev.type, ev.code)).compare("BTN_SOUTH") == 0 && ev.value == 1) {
-            if(buttons[0].is_selected) { //probably better way to do this
-              
-              snake_menu(canvas);
-              ResetCanvas(canvas, 32, 64, bg_color);
+          case 'E':
+            if(input.value == 1){
+              return;
             }
-          }
-        }  
-        rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev);  
-        
-      }
-      
-        
-
-      
-      
-      
-      SetPixel(canvas, current_selected, 60, 0, 0, 0);
-      switch(dir)
-          {
-            case 'd':
-              if(current_selected < buttons.size()-1) {
-                buttons[current_selected].is_selected = false;
-                current_selected +=1;
-                buttons[current_selected].is_selected = true;
+            break;
+          case 'S':
+            selected_button = get_selected_button(buttons);
+            
+            if(input.value == 1){
+              switch (selected_button) {
+                case 0:
+                  snake_menu(canvas);
+                  ResetCanvas(canvas, 32, 64, bg_color);
+                  draw_buttons(canvas, buttons, font, bright_color, dim_color);
+                  get_inputs_from_ps4(dev); //clear input buffer
+                  break;
+                case 1:
+                  run_tetris(canvas);
+                  ResetCanvas(canvas, 32, 64, bg_color);
+                  draw_buttons(canvas, buttons, font, bright_color, dim_color);
+                  get_inputs_from_ps4(dev); //clear input buffer
+                  break;
+                default:
+                  cout<< "Unrocognised button index!";
+                  break;
+                
+                  }
               }
-              
-          
-              dir = 0;
+            default:
               break;
             
-            case 'u':
-              if(current_selected > 0) {
-                buttons[current_selected].is_selected = false;
-                current_selected -=1;
-                buttons[current_selected].is_selected = true;
-              }
-              
-              dir = 0;
-
-              break;
-              
-            
-            
-            }
-            SetPixel(canvas, current_selected, 60, 255, 0, 0);
-          }
-          
-          
-        
+        }
+      }
+}
+      
 }
 
 

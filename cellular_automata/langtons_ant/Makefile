@@ -1,8 +1,8 @@
 CFLAGS=-Wall -O3 -g -Wextra -Wno-unused-parameter
 CXX = g++
 CXXFLAGS=$(CFLAGS)
-OBJECTS=main_menu.o include.o
-BINARIES=main_menu include
+OBJECTS=snake.o
+BINARIES=snake
 
 # Where our library resides. You mostly only need to change the
 # RGB_LIB_DISTRIBUTION, this is where the library is checked out.
@@ -21,23 +21,28 @@ EVDEV_LIBRARY=$(EVDEV_LIBDIR)/lib$(EVDEV_LIBRARY_NAME).a
 LDFLAGS+= -L$(EVDEV_LIBDIR) -l$(EVDEV_LIBRARY_NAME) 
 
 MY_INCDIR = /home/pi/Desktop/retro_matrix/lib
-MY_LIB = $(MY_INCDIR)/libshared.o
+MY_LIB = retromatrix
+
+LDFLAGS+= -L$(MY_INCDIR) -l$(MY_LIB) 
 
 
 
 
-all : libretromatrix.a
+all : ant
 
 $(RGB_LIBRARY): FORCE
-	$(MAKE) -C $(RGB_LIBDIR) 
+	$(MAKE) -C $(RGB_LIBDIR)
+
+ant : ant.o run_ant.o $(RGB_LIBRARY) $(EVDEV_LIBRARY)
+	$(CXX) run_ant.o ant.o  -o $@ $(LDFLAGS) 
+
+
+run_ant.o: run_ant.cc 
+	$(CXX) -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS)  -c run_ant.cc
 	
-
-libretromatrix.a: mylib.o  $(RGB_LIBRARY) $(EVDEV_LIBRARY)
-	$(AR) rcs libretromatrix.a mylib.o 
-
-mylib.o: mylib.cc
-	$(CXX) -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(LDLIBS) -o mylib.o -c mylib.cc 
-
+	
+ant.o: ant.cc 
+	$(CXX) -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS)  -c ant.cc
 
 
 

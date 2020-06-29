@@ -1,10 +1,13 @@
 
 #include "led-matrix.h"
 #include "graphics.h"
+#include "rule_30.h"
+#include "game_of_life.h"
+#include "ant.h"
 #include "mylib.h"
 #include <getopt.h>
 #include <string>
-#include "snake.h"
+
 #include <unistd.h>
 #include <math.h>
 #include <stdio.h>
@@ -23,6 +26,7 @@
 #include <linux/input.h>
 #include <cstdlib>
 #include "libevdev.h"
+
 using rgb_matrix::Font;
 using rgb_matrix::Canvas;
 using rgb_matrix::RGBMatrix;
@@ -31,7 +35,9 @@ using rgb_matrix::Color;
 using namespace std;
 
 
-static void DrawSnakeMenuCanvas(Canvas *canvas) {
+
+
+static void DrawCAMenuCanvas(Canvas *canvas) {
   /*
    * Let's create a simple animation. We use the canvas to draw
    * pixels. We wait between each step to have a slower animation.
@@ -90,10 +96,11 @@ static void DrawSnakeMenuCanvas(Canvas *canvas) {
   }
   
   // make buttons 
-  Button games_button{Point{2,2}, "1 PLAYER", true};
-  Button GOL_button{Point{25,2}, "2 PLAYER", false};
+  Button games_button{Point{2,2}, "GAME OF LIFE", true};
+  Button GOL_button{Point{13,2}, "RULE 30", false};
+  Button ant_button{Point{25,2}, "LANGTON'S ANT", false};
   
-  vector<Button> buttons{games_button, GOL_button};
+  vector<Button> buttons{games_button, GOL_button, ant_button};
   
   int letter_spacing = 0;
 
@@ -104,13 +111,12 @@ static void DrawSnakeMenuCanvas(Canvas *canvas) {
   Color highlight_color(255,255,255);
   ResetCanvas(canvas, 32, 64, bg_color);
   
-  int selected_button = get_selected_button(buttons);
+  
   list <ControllerInput> inputs;
   draw_buttons(canvas, buttons, font, bright_color, dim_color);
+  int selected_button = get_selected_button(buttons);
   while(true){
-    
-    
-      
+     
       inputs = get_inputs_from_ps4(dev);
       
       for(const auto &input: inputs){
@@ -132,44 +138,52 @@ static void DrawSnakeMenuCanvas(Canvas *canvas) {
             if(input.value == 1){
               switch (selected_button) {
                 case 0:
-                  run_snake(canvas, 1);
+                  run_GOL(canvas);
                   ResetCanvas(canvas, 32, 64, bg_color);
                   draw_buttons(canvas, buttons, font, bright_color, dim_color);
                   get_inputs_from_ps4(dev); //clear input buffer
                   break;
                 case 1:
-                  run_snake(canvas, 2);
+                  run_R30(canvas);
+                  ResetCanvas(canvas, 32, 64, bg_color);
+                  draw_buttons(canvas, buttons, font, bright_color, dim_color);
+                  get_inputs_from_ps4(dev); //clear input buffer
+                  break;
+                case 2:
+                  run_ant(canvas);
                   ResetCanvas(canvas, 32, 64, bg_color);
                   draw_buttons(canvas, buttons, font, bright_color, dim_color);
                   get_inputs_from_ps4(dev); //clear input buffer
                   break;
                 default:
-                  cout<< "Unrocognised button index! " << selected_button;
+                  cout<< "Unrocognised button index!";
                   break;
                 
-                
-                }
+                  }
               }
             default:
               break;
             
         }
       }
-    
-      
-      
-        
-
       
      
-    }
+            
+			
+			
+			
           
           
-        
+        }  
+      
+      
+
+      
+ 
 }
 
 
-int snake_menu(Canvas *canvas) {
+int ca_menu(Canvas *canvas) {
   
   if (canvas == NULL)
     return 1;
@@ -181,10 +195,11 @@ int snake_menu(Canvas *canvas) {
   //signal(SIGTERM, InterruptHandler);
   //signal(SIGINT, InterruptHandler);
 
-  DrawSnakeMenuCanvas(canvas);    // Using the canvas.
+  DrawCAMenuCanvas(canvas);    // Using the canvas.
 
   // Animation finished. Shut down the RGB matrix.
   
 
   return 0;
 }
+
