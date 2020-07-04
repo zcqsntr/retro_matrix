@@ -363,9 +363,9 @@ static void DrawGOLOnCanvas(Canvas *canvas) {
   
   
   Color pixel_color(0, 0, 255);
-  int LED_matrix[32][64] = {0};
   
-  RandomICs2D(LED_matrix, 0.2);
+  
+  
   
   // four gliders in the corners of a square
   
@@ -383,30 +383,35 @@ static void DrawGOLOnCanvas(Canvas *canvas) {
   //MakeBlinker(LED_matrix, 5, 5);
   
  
-  int t = 0;
+  int LED_matrix[32][64] = {0};
   int n_rows = 32;
   int n_cols = 64;
-  while (t < 500){
+  while(true){
+    int t = 0;
     
-    list <ControllerInput> inputs = get_inputs_from_ps4(dev);
+      RandomICs2D(LED_matrix, 0.2);
+    while (t < 500){
       
-      for(const auto &input: inputs){
-   
-        switch(input.type) {  // go from first input as unlikely to have multiple inputs perframes with no sleep
-          case 'p':
-            int quit = start_menu(canvas);
-            if(quit) {
-              return;
-            }
-        }
-      }
-    
-  
-    SetPixels(canvas, LED_matrix, pixel_color, n_rows, n_cols);
+      list <ControllerInput> inputs = get_inputs_from_ps4(dev);
+        
+        for(const auto &input: inputs){
      
-    GOLUpdate(LED_matrix);
-    usleep(1 * 50000);
-    t += 1;
+          switch(input.type) {  // go from first input as unlikely to have multiple inputs perframes with no sleep
+            case 'p':
+              int quit = start_menu(canvas);
+              if(quit) {
+                return;
+              }
+          }
+        }
+      
+    
+      SetPixels(canvas, LED_matrix, pixel_color, n_rows, n_cols);
+       
+      GOLUpdate(LED_matrix);
+      usleep(1 * 50000);
+      t += 1;
+  }
 }
 }
 

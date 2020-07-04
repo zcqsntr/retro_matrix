@@ -449,9 +449,10 @@ static void DrawTetris(Canvas *canvas) {
   //add_shape(board, L, Point{5,5}, rotation, length, width, colour);
   Point portait_pos{20, 5};
   Point landscape_pos{5, 15};
-  Point board_pos = landscape_pos;
-  int scale = 1;
-  int portrait = 0;
+  Point three_scale_pos{2,0};
+  Point board_pos = three_scale_pos;
+  int scale = 3;
+  int portrait = 1;
    
   brightness = 0.5;
   
@@ -547,7 +548,7 @@ static void DrawTetris(Canvas *canvas) {
   draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
   //active_piece.pos.row -= active_piece.length/2;
   //active_piece.pos.col -= active_piece.width/2;
-  int frame_skip = 15;
+  int frame_skip = 20;
   while (true){
     
     
@@ -640,6 +641,8 @@ static void DrawTetris(Canvas *canvas) {
     
     add_shape(board, active_piece);
     draw_board(canvas, board, board_pos, scale, portrait, brightness);
+    draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+    draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
     
    
     
@@ -740,6 +743,8 @@ static void DrawTetris(Canvas *canvas) {
           }
           add_shape(board, active_piece);
           draw_board(canvas, board, board_pos, scale, portrait, brightness);
+          draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+          draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
           usleep(50 * 100000);
           
           return;

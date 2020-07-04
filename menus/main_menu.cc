@@ -125,6 +125,7 @@ static void DrawOnCanvas(Canvas *canvas) {
   
   int selected_button = get_selected_button(buttons);
   list <ControllerInput> inputs;
+  ResetCanvas(canvas, 32, 64, bg_color);
   draw_buttons(canvas, buttons, font, bright_color, dim_color);
   
   while(true){
