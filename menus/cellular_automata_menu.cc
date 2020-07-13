@@ -57,26 +57,9 @@ int RetroMatrix::ca_menu() {
     usleep(1 * 1000);  // wait a little to slow down things.
   }
   * */
-  
-   
-  
-  struct libevdev *dev = NULL;
-  int fd;
-  int rc = 1;
-  int dir = 0;
+
   int current_selected = 0;
-  // ps4 controller "/dev/input/event6",
-  fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
-  rc = libevdev_new_from_fd(fd, &dev);
-  if (rc < 0) {
-          fprintf(stderr, "Failed to init libevdev (%s)\n", strerror(-rc));
-          exit(1);
-  }
-  printf("Input device name: \"%s\"\n", libevdev_get_name(dev));
-  printf("Input device ID: bus %#x vendor %#x product %#x\n",
-         libevdev_get_id_bustype(dev),
-         libevdev_get_id_vendor(dev),
-         libevdev_get_id_product(dev));
+
          
          
   // filter out the constant events that flood the queue
@@ -114,9 +97,14 @@ int RetroMatrix::ca_menu() {
   list <ControllerInput> inputs;
   draw_buttons(canvas, buttons, font, bright_color, dim_color);
   int selected_button = get_selected_button(buttons);
+  int fd;
+  int rc;
+  struct input_event ev;
   while(true){
-     
+    
       inputs = get_inputs_from_ps4(dev);
+      
+    
       
       for(const auto &input: inputs){
         switch(input.type) {  // go from first input as unlikely to have multiple inputs perframes with no sleep
@@ -160,6 +148,11 @@ int RetroMatrix::ca_menu() {
                 
                   }
               }
+              break;
+             case 'D': // controller disconnect
+              fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
+              rc = libevdev_new_from_fd(fd, &dev);
+              break;
             default:
               break;
             

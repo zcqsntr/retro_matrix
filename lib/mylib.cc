@@ -188,6 +188,11 @@ list<ControllerInput> get_inputs_from_ps4(struct libevdev *dev){
         rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev);  
       }
       
+      if(rc == -19) { // controller disconnect event 
+        ControllerInput input{'D', -1};
+        inputs.push_back(input);
+      }
+      
       
       return inputs;
 }

@@ -231,7 +231,7 @@ int RetroMatrix::run_R30(){
   
   int LED_matrix[64][64] = {0};
   LED_matrix[0][33] = 1;
-  
+  int quit;
   int tn = 0;
   list <ControllerInput> inputs;
   while (tn < 500){
@@ -241,10 +241,16 @@ int RetroMatrix::run_R30(){
    
         switch(input.type) {  // go from first input as unlikely to have multiple inputs perframes with no sleep
           case 'p':
-            int quit = start_menu();
+            quit = start_menu();
             if(quit) {
               return 0;
             }
+        
+        break;
+        case 'D': // controller disconnect
+              fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
+              rc = libevdev_new_from_fd(fd, &dev);
+              break;
         }
       }
       

@@ -157,6 +157,7 @@ int RetroMatrix::run_ant() {
   list <ControllerInput> inputs;
   int rotation = 0;
   ResetCanvas(canvas, n_rows, n_cols, bg_color);
+  int quit;
   while (tn < 100000){
       inputs = get_inputs_from_ps4(dev);
       
@@ -164,7 +165,7 @@ int RetroMatrix::run_ant() {
    
         switch(input.type) {  
           case 'p':
-            int quit = start_menu();
+            quit = start_menu();
             if(quit) {
               return 0;
             } else {
@@ -182,6 +183,11 @@ int RetroMatrix::run_ant() {
                 
               
             }
+            break;
+            case 'D': // controller disconnect
+              fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
+              rc = libevdev_new_from_fd(fd, &dev);
+              break;
         }
       }
       

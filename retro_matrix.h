@@ -2,6 +2,7 @@
 #define RM_H
 
 #include "led-matrix.h"
+#include "libevdev.h"
 
 using rgb_matrix::Canvas;
 class RetroMatrix {
@@ -10,11 +11,9 @@ class RetroMatrix {
 		int n_cols;
 		float brightness;
 		Canvas *canvas;
-		
-		
+		struct libevdev *dev;
 		
 		void draw_main_menu();
-		
 		
 		int ca_menu();
 		int games_menu();

@@ -364,7 +364,12 @@ void RetroMatrix::one_p_snake() {
   // draw current and hiugh score 
   draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
   draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
-  while (true){
+  int quit;
+
+  struct input_event ev;
+  while(true){
+    
+    
     inputs = get_inputs_from_ps4(dev);
     //
    
@@ -372,11 +377,11 @@ void RetroMatrix::one_p_snake() {
    
         switch(input.type) {  
           case 'p':
-            int quit = start_menu();
+            quit = start_menu();
             if(quit) {
               return;
             } else{
-              ResetCanvas(canvas, 32, 64, bg_color);
+              ResetCanvas(canvas, n_rows, n_cols, bg_color);
               DrawRect(canvas, min_row-1, min_col-1, max_row-min_row+2, max_col-min_col+2, border_color);
               // draw current and hiugh score 
               draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
@@ -391,6 +396,29 @@ void RetroMatrix::one_p_snake() {
                         
               }
             }
+            break;
+            case 'D': // controller disconnect
+              quit = start_menu();
+              if(quit) {
+                return ;
+              } else{
+                  ResetCanvas(canvas, n_rows, n_cols, bg_color);
+                  DrawRect(canvas, min_row-1, min_col-1, max_row-min_row+2, max_col-min_col+2, border_color);
+                  // draw current and hiugh score 
+                  draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+                  draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
+                   SetPixel(canvas, food.row, food.col,food_color);
+                   
+                   
+                  for(int s = 0; s<snake.size(); s++){
+              
+                      SetPixel(canvas, snake[s].row, snake[s].col, snake_color);
+                       
+                            
+                  }
+              }
+              
+              break;
         }
       }
       

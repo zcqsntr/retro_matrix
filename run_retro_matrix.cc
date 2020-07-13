@@ -58,31 +58,52 @@ int main(int argc, char *argv[]) {
   
   // ps4 controller "/dev/input/event6",
   
-  struct libevdev *dev = NULL;
+  struct libevdev *dv = NULL;
   int fd;
-  int rc = 1;
+  int rc = -19;
   int dir = 0;
   int current_selected = 0;
+  list <ControllerInput> inputs;
+  
   
   while(true){
     // ps4 controller "/dev/input/event6",
-    fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
-    rc = libevdev_new_from_fd(fd, &dev);
     
     
-    while (rc < 0) {
-            fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
-            rc = libevdev_new_from_fd(fd, &dev);
-    }
-    printf("Input device name: \"%s\"\n", libevdev_get_name(dev));
-    printf("Input device ID: bus %#x vendor %#x product %#x\n",
-           libevdev_get_id_bustype(dev),
-           libevdev_get_id_vendor(dev),
-           libevdev_get_id_product(dev));
-           
+    
 
-    matrix.draw_main_menu();    // Using the canvas.
-    usleep(50 * 100000);
+    
+    while (rc == -19 || rc == -9) {
+     
+            fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
+            rc = libevdev_new_from_fd(fd, &dv);
+    }
+    
+    
+    
+    matrix.dev = dv;
+    
+    while (!(rc == -19 || rc == -9))  {
+     
+      inputs = get_inputs_from_ps4(matrix.dev);
+     
+      for(const auto &input: inputs){
+        //cout << inputs.size() << endl;
+        if(input.type == 'p'){
+            
+            matrix.draw_main_menu();
+            
+        } else if(input.type == 'D'){
+          
+          fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
+          rc = libevdev_new_from_fd(fd, &matrix.dev);
+        }
+      }
+    }
+  
+          // Using the canvas.
+    
+    
 }
   // Animation finished. Shut down the RGB matrix.
   canvas->Clear();

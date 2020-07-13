@@ -385,7 +385,7 @@ int RetroMatrix::run_GOL() {
   int n_rows = 64;
   int n_cols = 64;
   int LED_matrix[64][64] = {0};
-
+  int quit;
   while(true){
     int t = 0;
     float r = (float)random(0, 255);
@@ -413,11 +413,15 @@ int RetroMatrix::run_GOL() {
      
           switch(input.type) {  // go from first input as unlikely to have multiple inputs perframes with no sleep
             case 'p':
-              int quit = start_menu();
+              quit = start_menu();
               if(quit) {
                 return 0;
-                
               }
+              break;
+            case 'D': // controller disconnect
+              fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
+              rc = libevdev_new_from_fd(fd, &dev);
+              break;
           }
         }
       

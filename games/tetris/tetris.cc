@@ -325,61 +325,10 @@ void remove_lines(list<vector<int>> &board, vector<int> lines){
 
     
 int RetroMatrix::run_tetris() {
-  /*
-   * Let's create a simple animation. We use the canvas to draw
-   * pixels. We wait between each step to have a slower animation.
-   
-  canvas->Fill(0, 0, 255);
 
-  int center_x = canvas->width() / 2;
-  int center_y = canvas->height() / 2;
-  float radius_max = canvas->width() / 2;
-  float angle_step = 1.0 / 360;
-  for (float a = 0, r = 0; r < radius_max; a += angle_step, r += angle_step) {
-    if (interrupt_received)
-      return;
-    float dot_x = cos(a * 2 * M_PI) * r;
-    float dot_y = sin(a * 2 * M_PI) * r;
-    canvas->SetPixel(center_x + dot_x, center_y + dot_y,
-                     255, 0, 0);
-    usleep(1 * 1000);  // wait a little to slow down things.
-  }
-  * */
-
-  
-  
-  struct libevdev *dev = NULL;
-
-  int fd;
-  int rc = 1;
-  // ps4 controller "/dev/input/event6",
-  fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
-  rc = libevdev_new_from_fd(fd, &dev);
-  if (rc < 0) {
-          fprintf(stderr, "Failed to init libevdev (%s)\n", strerror(-rc));
-          exit(1);
-  }
-  printf("Input device name: \"%s\"\n", libevdev_get_name(dev));
-  printf("Input device ID: bus %#x vendor %#x product %#x\n",
-         libevdev_get_id_bustype(dev),
-         libevdev_get_id_vendor(dev),
-         libevdev_get_id_product(dev));
-  
-  
          
          
-  // filter out the constant events that flood the queue
-  
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_X);
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_Y);
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_RX);
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_RY);
-  
-  
- 
-
-  
-
+  // filter out the constant events that flood the queu
   rgb_matrix::Font font;
   if (!font.LoadFont("/home/pi/Desktop/LED_matrix/rpi-rgb-led-matrix/fonts/4x6.bdf")) {
     fprintf(stderr, "Couldn't load font \n");
@@ -554,32 +503,13 @@ int RetroMatrix::run_tetris() {
   //active_piece.pos.row -= active_piece.length/2;
   //active_piece.pos.col -= active_piece.width/2;
   int frame_skip = 20;
-  while (true){
-    
-    
-    //
-   
-   
-    for(const auto &input: inputs){
-      
-        switch(input.type) {  
-          case 'p':
-            int quit = start_menu();
-            if(quit) {
-              return 0;
-            } else{
-              ResetCanvas(canvas, 32, 64, bg_color);
-              draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
-              draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
-            }
-            
-        }
-      }
-    
-      
+  struct input_event ev;
+  int rc;
+  int fd;
+  int quit;
+  while(true){
+     
     inputs = get_inputs_from_ps4(dev);
-    
-   
     // read inputs 
     for(const auto &input: inputs){
       if(input.type == 'N' && input.value == 1) {
@@ -597,7 +527,27 @@ int RetroMatrix::run_tetris() {
      
       
       switch(input.type) {  // go from first input as unlikely to have multiple inputs perframes with no sleep
-
+            case 'p':
+              quit = start_menu();
+              if(quit) {
+                return 0;
+              } else{
+                ResetCanvas(canvas, 32, 64, bg_color);
+                draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+                draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
+              }
+              break;
+            case 'D': // controller disconnect
+              quit = start_menu();
+              if(quit) {
+                return 0;
+              } else{
+                ResetCanvas(canvas, 32, 64, bg_color);
+                draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+                draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
+              }
+           
+              break;
             case 'y':
               if(input.value == -1) {
                 dir = 'u';
