@@ -1,9 +1,8 @@
 
 #include "led-matrix.h"
+#include "retro_matrix.h"
 #include "graphics.h"
-#include "rule_30.h"
-#include "game_of_life.h"
-#include "ant.h"
+
 #include "mylib.h"
 #include <getopt.h>
 #include <string>
@@ -37,7 +36,7 @@ using namespace std;
 
 
 
-static void DrawCAMenuCanvas(Canvas *canvas) {
+int RetroMatrix::ca_menu() {
   /*
    * Let's create a simple animation. We use the canvas to draw
    * pixels. We wait between each step to have a slower animation.
@@ -109,7 +108,7 @@ static void DrawCAMenuCanvas(Canvas *canvas) {
   Color bright_color(150, 0, 255);
   Color dim_color(70, 0, 150);
   Color highlight_color(255,255,255);
-  ResetCanvas(canvas, 32, 64, bg_color);
+  ResetCanvas(canvas, n_rows, n_cols, bg_color);
   
   
   list <ControllerInput> inputs;
@@ -129,7 +128,7 @@ static void DrawCAMenuCanvas(Canvas *canvas) {
             
           case 'E':
             if(input.value == 1){
-              return;
+              return 0;
             }
             break;
           case 'S':
@@ -138,20 +137,20 @@ static void DrawCAMenuCanvas(Canvas *canvas) {
             if(input.value == 1){
               switch (selected_button) {
                 case 0:
-                  run_GOL(canvas);
-                  ResetCanvas(canvas, 32, 64, bg_color);
+                  run_GOL();
+                  ResetCanvas(canvas, n_rows, n_cols, bg_color);
                   draw_buttons(canvas, buttons, font, bright_color, dim_color);
                   get_inputs_from_ps4(dev); //clear input buffer
                   break;
                 case 1:
-                  run_R30(canvas);
-                  ResetCanvas(canvas, 32, 64, bg_color);
+                  run_R30();
+                  ResetCanvas(canvas, n_rows, n_cols, bg_color);
                   draw_buttons(canvas, buttons, font, bright_color, dim_color);
                   get_inputs_from_ps4(dev); //clear input buffer
                   break;
                 case 2:
-                  run_ant(canvas);
-                  ResetCanvas(canvas, 32, 64, bg_color);
+                  run_ant();
+                  ResetCanvas(canvas, n_rows, n_cols, bg_color);
                   draw_buttons(canvas, buttons, font, bright_color, dim_color);
                   get_inputs_from_ps4(dev); //clear input buffer
                   break;
@@ -175,6 +174,7 @@ static void DrawCAMenuCanvas(Canvas *canvas) {
           
           
         }  
+        
       
       
 
@@ -183,23 +183,4 @@ static void DrawCAMenuCanvas(Canvas *canvas) {
 }
 
 
-int ca_menu(Canvas *canvas) {
-  
-  if (canvas == NULL)
-    return 1;
-  
-
-  // It is always good to set up a signal handler to cleanly exit when we
-  // receive a CTRL-C for instance. The DrawOnCanvas() routine is looking
-  // for that.
-  //signal(SIGTERM, InterruptHandler);
-  //signal(SIGINT, InterruptHandler);
-
-  DrawCAMenuCanvas(canvas);    // Using the canvas.
-
-  // Animation finished. Shut down the RGB matrix.
-  
-
-  return 0;
-}
 

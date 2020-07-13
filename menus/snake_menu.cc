@@ -1,10 +1,11 @@
 
 #include "led-matrix.h"
+#include "retro_matrix.h"
 #include "graphics.h"
 #include "mylib.h"
 #include <getopt.h>
 #include <string>
-#include "snake.h"
+
 #include <unistd.h>
 #include <math.h>
 #include <stdio.h>
@@ -30,8 +31,7 @@ using rgb_matrix::Color;
 
 using namespace std;
 
-
-static void DrawSnakeMenuCanvas(Canvas *canvas) {
+int RetroMatrix::snake_menu() {
   /*
    * Let's create a simple animation. We use the canvas to draw
    * pixels. We wait between each step to have a slower animation.
@@ -123,7 +123,7 @@ static void DrawSnakeMenuCanvas(Canvas *canvas) {
             
           case 'E':
             if(input.value == 1){
-              return;
+              return 0;
             }
             break;
           case 'S':
@@ -132,13 +132,13 @@ static void DrawSnakeMenuCanvas(Canvas *canvas) {
             if(input.value == 1){
               switch (selected_button) {
                 case 0:
-                  run_snake(canvas, 1);
+                  run_snake(1);
                   ResetCanvas(canvas, 32, 64, bg_color);
                   draw_buttons(canvas, buttons, font, bright_color, dim_color);
                   get_inputs_from_ps4(dev); //clear input buffer
                   break;
                 case 1:
-                  run_snake(canvas, 2);
+                  run_snake(2);
                   ResetCanvas(canvas, 32, 64, bg_color);
                   draw_buttons(canvas, buttons, font, bright_color, dim_color);
                   get_inputs_from_ps4(dev); //clear input buffer
@@ -166,25 +166,4 @@ static void DrawSnakeMenuCanvas(Canvas *canvas) {
           
           
         
-}
-
-
-int snake_menu(Canvas *canvas) {
-  
-  if (canvas == NULL)
-    return 1;
-  
-
-  // It is always good to set up a signal handler to cleanly exit when we
-  // receive a CTRL-C for instance. The DrawOnCanvas() routine is looking
-  // for that.
-  //signal(SIGTERM, InterruptHandler);
-  //signal(SIGINT, InterruptHandler);
-
-  DrawSnakeMenuCanvas(canvas);    // Using the canvas.
-
-  // Animation finished. Shut down the RGB matrix.
-  
-
-  return 0;
 }

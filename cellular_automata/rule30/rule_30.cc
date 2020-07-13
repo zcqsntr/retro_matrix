@@ -5,11 +5,11 @@
 // This code is public domain
 // (but note, that the led-matrix library this depends on is GPL v2)
 
-#include "start_menu.h"
+
 #include "led-matrix.h"
 #include "graphics.h"
 #include "mylib.h"
-#include "rule_30.h"
+#include "retro_matrix.h"
 #include <getopt.h>
 #include <string>
 
@@ -72,11 +72,11 @@ int rule_30(int left, int mid, int right) {
     
     
 }
-void R30Update(int LED_matrix[32][64], string boundary_conditions = "looping", int n_rows = 32, int n_cols = 64) {
+void R30Update(int LED_matrix[64][64], string boundary_conditions = "looping", int n_rows = 64, int n_cols = 64) {
   
   // first do middle area of array insulating effects 
   
-  int new_matrix[32][64] = {0};
+  int new_matrix[64][64] = {0};
   // for every i exceppt 0 the new row jsut equals the previous row 
   
   for(int i = 1; i < n_rows; i++){
@@ -133,7 +133,7 @@ void R30Update(int LED_matrix[32][64], string boundary_conditions = "looping", i
  
  
   
-void RandomICs1D(int LED_matrix[32][64], float density, int n_rows = 32, int n_cols = 64) {
+void RandomICs1D(int LED_matrix[64][64], float density, int n_rows = 64, int n_cols = 64) {
   
   // initial conditions
    // for first row
@@ -152,7 +152,7 @@ void RandomICs1D(int LED_matrix[32][64], float density, int n_rows = 32, int n_c
 }
 
 
-static void DrawRule30(Canvas *canvas) {
+int RetroMatrix::run_R30(){
   /*
    * Let's create a simple animation. We use the canvas to draw
    * pixels. We wait between each step to have a slower animation.
@@ -229,7 +229,7 @@ static void DrawRule30(Canvas *canvas) {
   //wont compile if you take this line out 
   rgb_matrix::DrawText(canvas, font, 0, 8 + font.baseline(), bg_color, &bg_color, to_string(score).c_str(), letter_spacing);
   
-  int LED_matrix[32][64] = {0};
+  int LED_matrix[64][64] = {0};
   LED_matrix[0][33] = 1;
   
   int tn = 0;
@@ -241,39 +241,23 @@ static void DrawRule30(Canvas *canvas) {
    
         switch(input.type) {  // go from first input as unlikely to have multiple inputs perframes with no sleep
           case 'p':
-            int quit = start_menu(canvas);
+            int quit = start_menu();
             if(quit) {
-              return;
+              return 0;
             }
         }
       }
       
     
   
-    SetPixels(canvas, LED_matrix, green, 32, 64);
+    SetPixels(canvas, LED_matrix, green, 64, 64);
      
     R30Update(LED_matrix);
     usleep(t * 10000);
     tn += 1;
 }
+return 0;
 }
 
 
-int run_R30(Canvas *canvas) {
-  
-  if (canvas == NULL)
-    return 1;
 
-  // It is always good to set up a signal handler to cleanly exit when we
-  // receive a CTRL-C for instance. The DrawOnCanvas() routine is looking
-  // for that.
-  //signal(SIGTERM, InterruptHandler);
-  //signal(SIGINT, InterruptHandler);
-  
-  
-
-  DrawRule30(canvas);
-  
-  
-  return 0;
-}

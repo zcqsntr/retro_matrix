@@ -5,11 +5,11 @@
 // This code is public domain
 // (but note, that the led-matrix library this depends on is GPL v2)
 
-#include "start_menu.h"
+
 #include "led-matrix.h"
 #include "graphics.h"
 #include "mylib.h"
-
+#include "retro_matrix.h"
 #include <getopt.h>
 #include <string>
 
@@ -47,7 +47,7 @@ static void InterruptHandler(int signo) {
 }
 */
 
-void RandomICs2D(int LED_matrix[32][64], float density, int n_rows = 32, int n_cols = 64) {
+void RandomICs2D(int LED_matrix[64][64], float density, int n_rows = 64, int n_cols = 64) {
   
   // initial conditions
   for (int i = 0; i < n_rows; i++) { // for each row
@@ -66,11 +66,11 @@ void RandomICs2D(int LED_matrix[32][64], float density, int n_rows = 32, int n_c
 }
 
 
-void GOLUpdate(int LED_matrix[32][64], string boundary_conditions = "looping", int n_rows = 32, int n_cols = 64) {
+void GOLUpdate(int LED_matrix[64][64], string boundary_conditions = "looping", int n_rows = 64, int n_cols = 64) {
   
   // first do middle area of array insulating effects 
   
-  int new_matrix[32][64] = {0};
+  int new_matrix[64][64] = {0};
   
   
   
@@ -165,7 +165,7 @@ void GOLUpdate(int LED_matrix[32][64], string boundary_conditions = "looping", i
   
 }
 
-void MakeGliderGun(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0, int direction = 0) {
+void MakeGliderGun(int LED_matrix[64][64],  int row_loc= 0, int col_loc = 0, int direction = 0) {
   
   // loc is top left point of glider 
   
@@ -221,7 +221,7 @@ void MakeGliderGun(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0, int
   
 }
 
-void MakeGlider(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0, int direction = 0) {
+void MakeGlider(int LED_matrix[64][64],  int row_loc= 0, int col_loc = 0, int direction = 0) {
   
   // loc is top left point of glider 
   
@@ -271,7 +271,7 @@ void MakeGlider(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0, int di
   
 }
 
-void MakeBlock(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0) {
+void MakeBlock(int LED_matrix[64][64],  int row_loc= 0, int col_loc = 0) {
   
   // loc is top left point of glider 
   
@@ -291,7 +291,7 @@ void MakeBlock(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0) {
   
 }
 
-void MakeBlinker(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0) {
+void MakeBlinker(int LED_matrix[64][64],  int row_loc= 0, int col_loc = 0) {
   
   // loc is top left point of glider 
   
@@ -311,7 +311,7 @@ void MakeBlinker(int LED_matrix[32][64],  int row_loc= 0, int col_loc = 0) {
   
 }
 
-static void DrawGOLOnCanvas(Canvas *canvas) {
+int RetroMatrix::run_GOL() {
   /*
    * Let's create a simple animation. We use the canvas to draw
    * pixels. We wait between each step to have a slower animation.
@@ -382,12 +382,27 @@ static void DrawGOLOnCanvas(Canvas *canvas) {
   
   //MakeBlinker(LED_matrix, 5, 5);
   
- 
-  int LED_matrix[32][64] = {0};
-  int n_rows = 32;
+  int n_rows = 64;
   int n_cols = 64;
+  int LED_matrix[64][64] = {0};
+
   while(true){
     int t = 0;
+    float r = (float)random(0, 255);
+    float g = (float)random(0, 255);
+    float b = (float)random(0, 255);
+    
+    
+    
+    float mag = sqrt(pow(r, 2) + pow(g, 2) + pow(b, 2));
+    
+    r = r/mag *255;
+    g = g/mag *255;
+    b = b/mag *255;
+    
+    cout << r << " " << g << " " << b << endl;
+    
+    pixel_color = Color(r,g,b);
     
       RandomICs2D(LED_matrix, 0.2);
     while (t < 500){
@@ -398,9 +413,10 @@ static void DrawGOLOnCanvas(Canvas *canvas) {
      
           switch(input.type) {  // go from first input as unlikely to have multiple inputs perframes with no sleep
             case 'p':
-              int quit = start_menu(canvas);
+              int quit = start_menu();
               if(quit) {
-                return;
+                return 0;
+                
               }
           }
         }
@@ -409,7 +425,7 @@ static void DrawGOLOnCanvas(Canvas *canvas) {
       SetPixels(canvas, LED_matrix, pixel_color, n_rows, n_cols);
        
       GOLUpdate(LED_matrix);
-      usleep(1 * 50000);
+      usleep(1 * 100000);
       t += 1;
   }
 }
@@ -422,21 +438,3 @@ static void DrawGOLOnCanvas(Canvas *canvas) {
   
   
 
-
-int run_GOL(Canvas *canvas) {
- 
-  if (canvas == NULL)
-    return 1;
-
-  // It is always good to set up a signal handler to cleanly exit when we
-  // receive a CTRL-C for instance. The DrawOnCanvas() routine is looking
-  // for that.
-  //signal(SIGTERM, InterruptHandler);
-  //signal(SIGINT, InterruptHandler);
-
-  DrawGOLOnCanvas(canvas);    // Using the canvas.
-  
-  
-
-  return 0;
-}

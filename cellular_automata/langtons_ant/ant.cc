@@ -5,11 +5,11 @@
 // This code is public domain
 // (but note, that the led-matrix library this depends on is GPL v2)
 
-#include "start_menu.h"
+
 #include "led-matrix.h"
 #include "graphics.h"
 #include "mylib.h"
-#include "ant.h"
+#include "retro_matrix.h"
 #include <getopt.h>
 #include <string>
 
@@ -56,7 +56,7 @@ struct Ant {
 };
 //TODO: spawn food only takes account ofplayer one 
 
-static void DrawAnt(Canvas *canvas) {
+int RetroMatrix::run_ant() {
   /*
    * Let's create a simple animation. We use the canvas to draw
    * pixels. We wait between each step to have a slower animation.
@@ -134,9 +134,9 @@ static void DrawAnt(Canvas *canvas) {
   //wont compile if you take this line out 
   rgb_matrix::DrawText(canvas, font, 0, 8 + font.baseline(), bg_color, &bg_color, to_string(score).c_str(), letter_spacing);
   
-  int LED_matrix[32][64] = {};
+  int LED_matrix[64][64] = {};
   
-  for (int i = 0; i<32; i++){
+  for (int i = 0; i<64; i++){
     for(int j= 0; j<64; j++){
       LED_matrix[i][j] = -1;
     }
@@ -145,7 +145,7 @@ static void DrawAnt(Canvas *canvas) {
   
 
   
-  Point ant_pos{16, 32};
+  Point ant_pos{32, 32};
   
   Ant ant;
   ant.pos = ant_pos;
@@ -156,7 +156,7 @@ static void DrawAnt(Canvas *canvas) {
   int tn = 0;
   list <ControllerInput> inputs;
   int rotation = 0;
-  ResetCanvas(canvas, 32, 64, bg_color);
+  ResetCanvas(canvas, n_rows, n_cols, bg_color);
   while (tn < 100000){
       inputs = get_inputs_from_ps4(dev);
       
@@ -164,13 +164,13 @@ static void DrawAnt(Canvas *canvas) {
    
         switch(input.type) {  
           case 'p':
-            int quit = start_menu(canvas);
+            int quit = start_menu();
             if(quit) {
-              return;
+              return 0;
             } else {
-              ResetCanvas(canvas, 32, 64, bg_color);
+              ResetCanvas(canvas, n_rows, n_cols, bg_color);
               SetPixel(canvas, ant.pos.row, ant.pos.col, ant_color);
-              for (int i = 0; i<32; i++){
+              for (int i = 0; i<64; i++){
                 for(int j= 0; j<64; j++){
                   
                   if(LED_matrix[i][j] == 1){
@@ -223,7 +223,7 @@ static void DrawAnt(Canvas *canvas) {
       case 0:
         ant.pos.row = ant.pos.row -1;
         if (ant.pos.row== -1){
-              ant.pos.row = 31;
+              ant.pos.row = 63;
             }
         break;
       case 1:
@@ -234,7 +234,7 @@ static void DrawAnt(Canvas *canvas) {
         break;
       case 2:
         ant.pos.row = ant.pos.row +1;
-          if (ant.pos.row== 32){
+          if (ant.pos.row== 64){
               ant.pos.row = 0;
             }
         break;
@@ -247,24 +247,7 @@ static void DrawAnt(Canvas *canvas) {
     usleep(t * 3000);
     tn += 1;
 }
+return 0;
 }
 
 
-int run_ant(Canvas *canvas) {
-  
-  if (canvas == NULL)
-    return 1;
-
-  // It is always good to set up a signal handler to cleanly exit when we
-  // receive a CTRL-C for instance. The DrawOnCanvas() routine is looking
-  // for that.
-  //signal(SIGTERM, InterruptHandler);
-  //signal(SIGINT, InterruptHandler);
-  
-  
-
-  DrawAnt(canvas);
-  
-  
-  return 0;
-}

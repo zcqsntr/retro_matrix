@@ -5,10 +5,12 @@
 // This code is public domain
 // (but note, that the led-matrix library this depends on is GPL v2)
 
+
 #include "led-matrix.h"
 #include "graphics.h"
+#include "retro_matrix.h"
 #include "mylib.h"
-#include "snake.h"
+
 #include <getopt.h>
 #include <string>
 
@@ -31,7 +33,7 @@
 #include <cstdlib>
 #include "libevdev.h"
 #include <fstream>
-#include "start_menu.h"
+
 
 using rgb_matrix::GPIO;
 using rgb_matrix::RGBMatrix;
@@ -236,7 +238,7 @@ bool turning_back(int dir, int new_dir){
 }
 
     
-static void DrawOnePlayer(Canvas *canvas) {
+void RetroMatrix::one_p_snake() {
   /*
    * Let's create a simple animation. We use the canvas to draw
    * pixels. We wait between each step to have a slower animation.
@@ -289,14 +291,14 @@ static void DrawOnePlayer(Canvas *canvas) {
   
   // play area taking into account score display and border
   
-  int min_row = 1;
-  int max_row = 30;
+  int min_row = 7;
+  int max_row = 56;
   int min_col = 13;
   int max_col = 62;
   
 
   //deque<Point> snake{Point{3,18}, Point{3,17}, Point{3,16}, Point{3,15}, Point{3,14}, Point{3,13}, Point{3,12}};
-  deque<Point> snake{ Point{3,max_row+1}};
+  deque<Point> snake{ Point{min_row+3,min_col+1}};
   // snake is dequeue where the front of the queue is the head and the back fo the queue if the tail
   
   
@@ -340,7 +342,7 @@ static void DrawOnePlayer(Canvas *canvas) {
   Color bg_color(0,0,0);
   Color white(200, 200, 200);
   Color border_color(150, 30, 0);
-  
+  border_color = Color(255, 0, 0);
   Color food_color(0,200, 0);
   Color snake_color(0,0,255);
   
@@ -370,7 +372,7 @@ static void DrawOnePlayer(Canvas *canvas) {
    
         switch(input.type) {  
           case 'p':
-            int quit = start_menu(canvas);
+            int quit = start_menu();
             if(quit) {
               return;
             } else{
@@ -452,7 +454,7 @@ static void DrawOnePlayer(Canvas *canvas) {
 }
 
 
-static void DrawTwoPlayer(Canvas *canvas) {
+void RetroMatrix::two_p_snake() {
   /*
    * Let's create a simple animation. We use the canvas to draw
    * pixels. We wait between each step to have a slower animation.
@@ -580,7 +582,7 @@ static void DrawTwoPlayer(Canvas *canvas) {
    
         switch(input.type) {  
           case 'p':
-            int quit = start_menu(canvas);
+            int quit = start_menu();
             if(quit) {
               return;
             } else{
@@ -715,7 +717,7 @@ static void DrawTwoPlayer(Canvas *canvas) {
 }
 }
 
-int run_snake(Canvas *canvas, int n_players) {
+int RetroMatrix::run_snake(int n_players) {
 
   if (canvas == NULL)
     return 1;
@@ -727,11 +729,11 @@ int run_snake(Canvas *canvas, int n_players) {
   //signal(SIGINT, InterruptHandler);
   
   Color bg_color(0, 0, 0);
-  ResetCanvas(canvas, 32, 64, bg_color);
+  ResetCanvas(canvas, n_rows, n_rows, bg_color);
   if(n_players == 1){
-    DrawOnePlayer(canvas);
+    one_p_snake();
   } else {
-    DrawTwoPlayer(canvas);
+    two_p_snake();
   }
 
   

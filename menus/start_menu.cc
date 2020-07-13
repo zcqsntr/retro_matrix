@@ -1,7 +1,7 @@
 
 #include "led-matrix.h"
 #include "graphics.h"
-
+#include "retro_matrix.h"
 #include "mylib.h"
 #include <getopt.h>
 #include <string>
@@ -35,7 +35,7 @@ using namespace std;
 
 
 
-static int DrawStartMenuCanvas(Canvas *canvas) {
+int RetroMatrix::start_menu() {
   /*
    * Let's create a simple animation. We use the canvas to draw
    * pixels. We wait between each step to have a slower animation.
@@ -103,10 +103,10 @@ static int DrawStartMenuCanvas(Canvas *canvas) {
 
   
   Color bg_color(0, 0, 0);
-  Color bright_color(150, 0, 255);
-  Color dim_color(70, 0, 150);
-  Color highlight_color(255,255,255);
-  ResetCanvas(canvas, 32, 64, bg_color);
+  Color bright_color(150*brightness, 0, 255*brightness);
+  Color dim_color(70*brightness, 0, 150*brightness);
+  Color highlight_color(255*brightness,255*brightness,255*brightness);
+  ResetCanvas(canvas, n_rows, n_cols, bg_color);
 
   
   list <ControllerInput> inputs;
@@ -136,23 +136,4 @@ static int DrawStartMenuCanvas(Canvas *canvas) {
 }
 
 
-int start_menu(Canvas *canvas) {
-  
-  if (canvas == NULL)
-    return 1;
-  
-
-  // It is always good to set up a signal handler to cleanly exit when we
-  // receive a CTRL-C for instance. The DrawOnCanvas() routine is looking
-  // for that.
-  //signal(SIGTERM, InterruptHandler);
-  //signal(SIGINT, InterruptHandler);
-  
-  int quit = DrawStartMenuCanvas(canvas);    // Using the canvas.
-
-  // Animation finished. Shut down the RGB matrix.
-  
-  
-  return quit;
-}
 

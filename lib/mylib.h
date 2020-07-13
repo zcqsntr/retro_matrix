@@ -54,7 +54,7 @@ void DrawRect(Canvas *canvas, int row, int col, int height, int width, Color col
 
 void ResetCanvas(Canvas *canvas, int n_rows, int n_cols, Color bg_color);
 
-void SetPixels(Canvas *canvas, int LED_matrix[32][64], Color color, int n_rows, int n_cols );
+void SetPixels(Canvas *canvas, int LED_matrix[64][64], Color color, int n_rows, int n_cols );
 
 
 ControllerInput parse_ps4_input(struct input_event ev);

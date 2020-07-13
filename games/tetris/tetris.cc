@@ -8,8 +8,8 @@
 #include "led-matrix.h"
 #include "graphics.h"
 #include "mylib.h"
-#include "tetris.h"
-#include "start_menu.h"
+
+#include "retro_matrix.h"
 #include <getopt.h>
 #include <string>
 
@@ -324,7 +324,7 @@ void remove_lines(list<vector<int>> &board, vector<int> lines){
 
 
     
-static void DrawTetris(Canvas *canvas) {
+int RetroMatrix::run_tetris() {
   /*
    * Let's create a simple animation. We use the canvas to draw
    * pixels. We wait between each step to have a slower animation.
@@ -450,9 +450,14 @@ static void DrawTetris(Canvas *canvas) {
   Point portait_pos{20, 5};
   Point landscape_pos{5, 15};
   Point three_scale_pos{2,0};
-  Point board_pos = three_scale_pos;
+  
+  
+  Point big_pos{2, 21};
+  
+  Point board_pos = big_pos;
+  
   int scale = 3;
-  int portrait = 1;
+  int portrait = 0;
    
   brightness = 0.5;
   
@@ -559,9 +564,9 @@ static void DrawTetris(Canvas *canvas) {
       
         switch(input.type) {  
           case 'p':
-            int quit = start_menu(canvas);
+            int quit = start_menu();
             if(quit) {
-              return;
+              return 0;
             } else{
               ResetCanvas(canvas, 32, 64, bg_color);
               draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
@@ -747,7 +752,7 @@ static void DrawTetris(Canvas *canvas) {
           draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
           usleep(50 * 100000);
           
-          return;
+          return 0;
     
        }
     }
@@ -760,22 +765,3 @@ static void DrawTetris(Canvas *canvas) {
 }
 }
 
-
-int run_tetris(Canvas *canvas) {
-  
-  if (canvas == NULL)
-    return 1;
-
-  // It is always good to set up a signal handler to cleanly exit when we
-  // receive a CTRL-C for instance. The DrawOnCanvas() routine is looking
-  // for that.
-  //signal(SIGTERM, InterruptHandler);
-  //signal(SIGINT, InterruptHandler);
-  
-  
-
-  DrawTetris(canvas);
-  
-  
-  return 0;
-}

@@ -24,7 +24,7 @@ int get_selected_button(vector<Button> buttons){
 	
 }
 
-int random(int min, int max) //range : [min, max)
+int random(int min, int max) //range : [min, max]
 {
    static bool first = true;
    if (first) 
@@ -82,7 +82,7 @@ void DrawRect(Canvas *canvas, int row, int col, int height, int width, Color col
   }
 }
 
-void SetPixels(Canvas *canvas, int LED_matrix[32][64], Color color, int n_rows = 32, int n_cols = 64) {
+void SetPixels(Canvas *canvas, int LED_matrix[64][64], Color color, int n_rows = 32, int n_cols = 64) {
   
     for (int i = 0; i < n_rows; i++) { // for each row
       for (int j = 0; j < n_cols; j++) { // for each column

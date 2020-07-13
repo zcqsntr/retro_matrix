@@ -5,12 +5,13 @@
 // This code is public domain
 // (but note, that the led-matrix library this depends on is GPL v2)
 
+
 #include "led-matrix.h"
-#include "games_menu.h"
-#include "cellular_automata_menu.h"
+#include "retro_matrix.h"
+
 #include "graphics.h"
 #include "mylib.h"
-#include "game_of_life.h"
+
 #include <getopt.h>
 #include <string>
 
@@ -52,7 +53,7 @@ static void InterruptHandler(int signo) {
 
 //TODO: bug where food disapears if it spawns inside snake 
 
-static void DrawOnCanvas(Canvas *canvas) {
+void RetroMatrix::draw_main_menu() {
   /*
    * Let's create a simple animation. We use the canvas to draw
    * pixels. We wait between each step to have a slower animation.
@@ -118,9 +119,9 @@ static void DrawOnCanvas(Canvas *canvas) {
 
   
   Color bg_color(0, 0, 0);
-  Color bright_color(150, 0, 255);
-  Color dim_color(70, 0, 150);
-  Color highlight_color(255,255,255);
+  Color bright_color(150*brightness, 0, 255*brightness);
+  Color dim_color(70*brightness, 0, 150*brightness);
+  Color highlight_color(255*brightness,255*brightness,255*brightness);
   
   
   int selected_button = get_selected_button(buttons);
@@ -145,7 +146,7 @@ static void DrawOnCanvas(Canvas *canvas) {
             
           case 'E':
             if(input.value == 1){
-              
+              ResetCanvas(canvas, n_rows, n_cols, bg_color);
               return;
             }
             break;
@@ -155,16 +156,16 @@ static void DrawOnCanvas(Canvas *canvas) {
             if(input.value == 1){
               switch (selected_button) {
                 case 0:
-                  games_menu(canvas);
+                  games_menu();
                 
-                  ResetCanvas(canvas, 32, 64, bg_color);
+                  ResetCanvas(canvas, n_rows, n_cols, bg_color);
                   draw_buttons(canvas, buttons, font, bright_color, dim_color);
                   get_inputs_from_ps4(dev); //clear input buffer
                   break;
                 case 1:
-                  ca_menu(canvas);
+                  ca_menu();
               
-                  ResetCanvas(canvas, 32, 64, bg_color);
+                  ResetCanvas(canvas, n_cols, n_rows, bg_color);
                   draw_buttons(canvas, buttons, font, bright_color, dim_color);
                   get_inputs_from_ps4(dev); //clear input buffer
                   break;
@@ -188,7 +189,7 @@ static void DrawOnCanvas(Canvas *canvas) {
 }
 
   
-
+/*
 
 int main(int argc, char *argv[]) {
   RGBMatrix::Options defaults;
@@ -220,3 +221,4 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
+* */

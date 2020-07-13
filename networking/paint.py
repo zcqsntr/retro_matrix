@@ -14,9 +14,9 @@ def connectionStatus(client, userdata, flags, rc):
 def messageDecoder(client, userdata, msg):
     message = msg.payload.decode(encoding='UTF-8')
     
-    print("message in python")
-    print(message)
-    print
+    #print("message in python")
+    #print(message)
+    #print
     
 
     proc.stdin.write(message + "\n")
