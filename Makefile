@@ -1,4 +1,4 @@
-CFLAGS=-Wall -O3 -g -Wextra -Wno-unused-parameter
+CFLAGS=-Wall -O3 -g -Wextra -Wno-unused-parameter --std=c++17
 CXX = g++
 CXXFLAGS=$(CFLAGS)
 OBJECTS=main_menu.o include.o
@@ -23,6 +23,7 @@ EVDEV_LIBRARY=$(EVDEV_LIBDIR)/lib$(EVDEV_LIBRARY_NAME).a
 MY_INCDIR = /home/pi/Desktop/retro_matrix/lib
 MY_LIB = retromatrix
 
+LDFLAGS+=-lstdc++fs
 LDFLAGS+= -L$(MY_INCDIR) -l$(MY_LIB) 
 LDFLAGS+=-L$(RGB_LIBDIR) -l$(RGB_LIBRARY_NAME) -lrt -lm -lpthread
 LDFLAGS+= -L$(EVDEV_LIBDIR) -l$(EVDEV_LIBRARY_NAME) 

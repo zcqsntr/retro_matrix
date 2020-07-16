@@ -84,12 +84,12 @@ int RetroMatrix::games_menu() {
             draw_buttons(canvas, buttons, font, bright_color, dim_color);
             break;
             
-          case 'E':
+          case 'S':
             if(input.value == 1){
               return 0;
             }
             break;
-          case 'S':
+          case 'E':
             selected_button = get_selected_button(buttons);
             
             if(input.value == 1){

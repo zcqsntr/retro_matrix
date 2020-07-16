@@ -328,7 +328,7 @@ int RetroMatrix::run_tetris() {
 
          
          
-  // filter out the constant events that flood the queu
+
   rgb_matrix::Font font;
   if (!font.LoadFont("/home/pi/Desktop/LED_matrix/rpi-rgb-led-matrix/fonts/4x6.bdf")) {
     fprintf(stderr, "Couldn't load font \n");

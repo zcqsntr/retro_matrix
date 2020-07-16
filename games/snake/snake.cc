@@ -239,69 +239,23 @@ bool turning_back(int dir, int new_dir){
 
     
 void RetroMatrix::one_p_snake() {
-  /*
-   * Let's create a simple animation. We use the canvas to draw
-   * pixels. We wait between each step to have a slower animation.
-   
-  canvas->Fill(0, 0, 255);
-
-  int center_x = canvas->width() / 2;
-  int center_y = canvas->height() / 2;
-  float radius_max = canvas->width() / 2;
-  float angle_step = 1.0 / 360;
-  for (float a = 0, r = 0; r < radius_max; a += angle_step, r += angle_step) {
-    if (interrupt_received)
-      return;
-    float dot_x = cos(a * 2 * M_PI) * r;
-    float dot_y = sin(a * 2 * M_PI) * r;
-    canvas->SetPixel(center_x + dot_x, center_y + dot_y,
-                     255, 0, 0);
-    usleep(1 * 1000);  // wait a little to slow down things.
-  }
-  * */
-
   
-  
-  struct libevdev *dev = NULL;
 
   int fd;
   int rc = 1;
-  // ps4 controller "/dev/input/event6",
-  fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
-  rc = libevdev_new_from_fd(fd, &dev);
-  if (rc < 0) {
-          fprintf(stderr, "Failed to init libevdev (%s)\n", strerror(-rc));
-          exit(1);
-  }
-  printf("Input device name: \"%s\"\n", libevdev_get_name(dev));
-  printf("Input device ID: bus %#x vendor %#x product %#x\n",
-         libevdev_get_id_bustype(dev),
-         libevdev_get_id_vendor(dev),
-         libevdev_get_id_product(dev));
-  
-  
-         
-         
-  // filter out the constant events that flood the queue
-  
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_X);
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_Y);
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_RX);
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_RY);
-  
+   
+   
   // play area taking into account score display and border
   
-  int min_row = 7;
-  int max_row = 56;
-  int min_col = 13;
-  int max_col = 62;
+  int min_row = 4;
+  int max_row = 53;
+  int min_col = 7;
+  int max_col = 56;
   
 
   //deque<Point> snake{Point{3,18}, Point{3,17}, Point{3,16}, Point{3,15}, Point{3,14}, Point{3,13}, Point{3,12}};
   deque<Point> snake{ Point{min_row+3,min_col+1}};
   // snake is dequeue where the front of the queue is the head and the back fo the queue if the tail
-  
-  
   
   
  
@@ -362,8 +316,8 @@ void RetroMatrix::one_p_snake() {
   int new_dir = -1;
   
   // draw current and hiugh score 
-  draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
-  draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
+  draw_text(canvas, font, 63, 31 - 5*font.baseline(),  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+  draw_text(canvas, font, 63 , 31 + 3*font.baseline(), high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
   int quit;
 
   struct input_event ev;
@@ -384,8 +338,8 @@ void RetroMatrix::one_p_snake() {
               ResetCanvas(canvas, n_rows, n_cols, bg_color);
               DrawRect(canvas, min_row-1, min_col-1, max_row-min_row+2, max_col-min_col+2, border_color);
               // draw current and hiugh score 
-              draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
-              draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
+              draw_text(canvas, font, 63, 31-5*font.baseline(),  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+  draw_text(canvas, font, 63 , 31 + 3*font.baseline(), high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
                SetPixel(canvas, food.row, food.col,food_color);
                
                
@@ -405,8 +359,8 @@ void RetroMatrix::one_p_snake() {
                   ResetCanvas(canvas, n_rows, n_cols, bg_color);
                   DrawRect(canvas, min_row-1, min_col-1, max_row-min_row+2, max_col-min_col+2, border_color);
                   // draw current and hiugh score 
-                  draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
-                  draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
+                  draw_text(canvas, font, 63, 31-5*font.baseline(),  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+  draw_text(canvas, font, 63 , 31 + 3*font.baseline(), high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
                    SetPixel(canvas, food.row, food.col,food_color);
                    
                    
@@ -446,8 +400,8 @@ void RetroMatrix::one_p_snake() {
       SetPixel(canvas, food.row, food.col,food_color);
       score+=1;
       // draw current and hiugh score 
-      draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
-      draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
+      draw_text(canvas, font, 63, 31-5*font.baseline(),  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+  draw_text(canvas, font, 63 , 31 + 3*font.baseline(), high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
       if(score > high_score) {
         high_score = score;
       }
@@ -506,17 +460,10 @@ void RetroMatrix::two_p_snake() {
   
   
   
-  struct libevdev *dev = NULL;
-  struct libevdev *dev1 = NULL;
+  
   int fd;
   int rc = 1;
-  // ps4 controller "/dev/input/event6",
-  fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
-  rc = libevdev_new_from_fd(fd, &dev);
-  if (rc < 0) {
-          fprintf(stderr, "Failed to init libevdev (%s)\n", strerror(-rc));
-          exit(1);
-  }
+  
   printf("Input device name: \"%s\"\n", libevdev_get_name(dev));
   printf("Input device ID: bus %#x vendor %#x product %#x\n",
          libevdev_get_id_bustype(dev),
@@ -524,13 +471,7 @@ void RetroMatrix::two_p_snake() {
          libevdev_get_id_product(dev));
   
   
-  // keyboard
-  fd = open("/dev/input/event1", O_RDONLY|O_NONBLOCK);
-  rc = libevdev_new_from_fd(fd, &dev1);
-  if (rc < 0) {
-          fprintf(stderr, "Failed to init libevdev (%s)\n", strerror(-rc));
-          exit(1);
-  }
+ 
   printf("Input device name: \"%s\"\n", libevdev_get_name(dev1));
   printf("Input device ID: bus %#x vendor %#x product %#x\n",
          libevdev_get_id_bustype(dev1),
@@ -540,14 +481,11 @@ void RetroMatrix::two_p_snake() {
          
   // filter out the constant events that flood the queue
   
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_X);
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_Y);
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_RX);
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_RY);
+  
   
          
   int min_row = 0;
-  int max_row = 31;
+  int max_row = 63;
   int min_col = 0;
   int max_col = 63;
   Color win_text_color(255,255,255);
@@ -597,7 +535,8 @@ void RetroMatrix::two_p_snake() {
   }
   
   bool boundaries = false;
-  list<ControllerInput> inputs;;
+  list<ControllerInput> inputs;
+  list<ControllerInput> inputs1;
   
   
   while(true){
@@ -637,7 +576,39 @@ void RetroMatrix::two_p_snake() {
     
     
     
-    dir1 = get_direction_from_keyboard(dev1, dir1);
+    inputs1 = get_inputs_from_ps4(dev1);
+    
+
+    //
+   
+    for(const auto &input: inputs1){
+   
+        switch(input.type) {  
+          case 'p':
+            int quit = start_menu();
+            if(quit) {
+              return;
+            } else{
+              ResetCanvas(canvas, 32, 64, bg_color);
+              Point food = spawn_food(snake, min_row, max_row, min_col, max_col);
+              SetPixel(canvas, food.row, food.col, food_color);
+              for(int s = 0; s<snake.size(); s++){
+          
+                  SetPixel(canvas, snake[s].row, snake[s].col, snake_color);
+                  SetPixel(canvas, snake1[s].row, snake1[s].col, snake1_color);
+                        
+              }
+                          
+            }
+        }
+      }
+      
+      
+    new_dir = get_direction_from_inputs(inputs1);
+ 
+    if(new_dir != -1 && !turning_back(dir1, new_dir)){
+      dir1 = new_dir;
+    }
 
     move_head(snake,  dir, boundaries, min_row, max_row, min_col, max_col);
     

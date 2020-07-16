@@ -175,36 +175,12 @@ int RetroMatrix::run_R30(){
   * */
 
   
-  
-  struct libevdev *dev = NULL;
 
   int fd;
-  int rc = 1;
-  // ps4 controller "/dev/input/event6",
-  fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
-  rc = libevdev_new_from_fd(fd, &dev);
-  if (rc < 0) {
-          fprintf(stderr, "Failed to init libevdev (%s)\n", strerror(-rc));
-          exit(1);
-  }
-  printf("Input device name: \"%s\"\n", libevdev_get_name(dev));
-  printf("Input device ID: bus %#x vendor %#x product %#x\n",
-         libevdev_get_id_bustype(dev),
-         libevdev_get_id_vendor(dev),
-         libevdev_get_id_product(dev));
+  int rc;
   
   
-         
-         
-  // filter out the constant events that flood the queue
-  
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_X);
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_Y);
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_RX);
-  libevdev_disable_event_code	(dev, EV_ABS, ABS_RY);
-  
-  
-  float brightness = 0.6;
+  float brightness = 1;
   Color light_blue(0*brightness,200*brightness,255*brightness); // line
   Color dark_blue(0*brightness,0*brightness,255*brightness); // baackwards L
   Color orange(255*brightness,150*brightness,0*brightness); // L

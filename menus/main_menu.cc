@@ -102,13 +102,13 @@ void RetroMatrix::draw_main_menu() {
             draw_buttons(canvas, buttons, font, bright_color, dim_color);
             break;
             
-          case 'E':
+          case 'S':
             if(input.value == 1){
               ResetCanvas(canvas, n_rows, n_cols, bg_color);
               return;
             }
             break;
-          case 'S':
+          case 'E':
             selected_button = get_selected_button(buttons);
             
             if(input.value == 1){

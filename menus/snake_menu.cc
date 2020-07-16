@@ -78,25 +78,25 @@ int RetroMatrix::snake_menu() {
             draw_buttons(canvas, buttons, font, bright_color, dim_color);
             break;
             
-          case 'E':
+          case 'S':
             if(input.value == 1){
               return 0;
             }
             break;
-          case 'S':
+          case 'E':
             selected_button = get_selected_button(buttons);
             
             if(input.value == 1){
               switch (selected_button) {
                 case 0:
                   run_snake(1);
-                  ResetCanvas(canvas, 32, 64, bg_color);
+                  ResetCanvas(canvas, n_rows, n_cols, bg_color);
                   draw_buttons(canvas, buttons, font, bright_color, dim_color);
                   get_inputs_from_ps4(dev); //clear input buffer
                   break;
                 case 1:
                   run_snake(2);
-                  ResetCanvas(canvas, 32, 64, bg_color);
+                  ResetCanvas(canvas, n_rows, n_cols, bg_color);
                   draw_buttons(canvas, buttons, font, bright_color, dim_color);
                   get_inputs_from_ps4(dev); //clear input buffer
                   break;

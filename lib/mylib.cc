@@ -130,7 +130,7 @@ ControllerInput parse_ps4_input(struct input_event ev){
     type = 'E';
     value = ev.value;
     
-  } else if (input_string.compare("BTN_WEST") == 0){
+  } else if (input_string.compare("BTN_WEST") == 0 || input_string.compare("BTN_C") == 0){
     type = 'W';
     value = ev.value;
     
@@ -138,6 +138,39 @@ ControllerInput parse_ps4_input(struct input_event ev){
     type = 'N';
     value = ev.value;
     
+    // d pad on the zero 2
+    } else if(input_string.compare("ABS_X") == 0) {
+      type = 'x';
+      
+      switch(ev.value) {
+        case 0:
+          value = -1;
+          break;
+        case  65535:
+          value = 1;
+          break;
+        case 32512:
+          value = 0;
+          break;
+      }
+      
+
+    } else if(input_string.compare("ABS_Y") == 0) {
+      type = 'y';
+      switch(ev.value) {
+        case 0:
+          value = -1;
+          break;
+        case 65535:
+          value = 1;
+          break;
+        case 32512:
+          value = 0;
+          break;
+      }
+      
+    
+    /*
     // bumpers
   } else if (input_string.compare("BTN_TL") == 0){
     type = 'l';
@@ -146,16 +179,18 @@ ControllerInput parse_ps4_input(struct input_event ev){
     type = 'r';
     value = ev.value;
   
-  // triggers
+  // triggers degenerate with switc hpro start button so deal with that if we ever need triggers
+  
   } else if (input_string.compare("BTN_TL2") == 0){
     type = 'L';
     value = ev.value;
   } else if (input_string.compare("BTN_TR2") == 0){
     type = 'R';
     value = ev.value;
+    */
     
   // start button
-  } else if (input_string.compare("BTN_START") == 0){
+  } else if (input_string.compare("BTN_START") == 0 || input_string.compare("BTN_TR2") == 0){
     type = 'p';
     value = ev.value;
     

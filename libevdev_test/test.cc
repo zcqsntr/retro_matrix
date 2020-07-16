@@ -127,7 +127,7 @@ int main(int argc, char **argv)
     // ps4 controller "/dev/input/event6"
     // keyboard "/dev/input/event0"
     
-    fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
+    fd = open("/dev/input/event4", O_RDONLY|O_NONBLOCK);
     rc = libevdev_new_from_fd(fd, &dev);
     cout << rc << endl;
     if (rc < 0) {
@@ -139,9 +139,9 @@ int main(int argc, char **argv)
            libevdev_get_id_bustype(dev),
            libevdev_get_id_vendor(dev),
            libevdev_get_id_product(dev));
-    if (!libevdev_has_event_type(dev, EV_REL) ||
-        !libevdev_has_event_code(dev, EV_KEY, BTN_LEFT)) {
-            printf("This device does not look like a mouse\n");
+    if (libevdev_has_event_type(dev, EV_ABS) &&
+        libevdev_has_event_code(dev, EV_KEY, BTN_NORTH)) {
+            printf("This device looks like a controller\n");
             //exit(1);
     }
     /*
@@ -162,9 +162,9 @@ int main(int argc, char **argv)
             struct input_event ev;
             
             rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
-            cout << rc<<endl;
+            
    
-            if (rc == 0 && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("SYN_REPORT") == 0) && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_X") == 0) && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_Y") == 0) && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_RY") == 0)&& !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_RX") == 0))
+            if (rc == 0 && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("SYN_REPORT") == 0))// && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_X") == 0) && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_Y") == 0) && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_RY") == 0)&& !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_RX") == 0))
                     printf("Event: %s %s %d\n",
                            libevdev_event_type_get_name(ev.type),
                            libevdev_event_code_get_name(ev.type, ev.code),

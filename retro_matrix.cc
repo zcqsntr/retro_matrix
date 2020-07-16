@@ -5,7 +5,7 @@
 
 #include "graphics.h"
 #include "mylib.h"
-#include "game_of_life.h"
+
 #include <getopt.h>
 #include <string>
 
