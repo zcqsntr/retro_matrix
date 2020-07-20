@@ -1,4 +1,4 @@
-CFLAGS=-Wall -O3 -g -Wextra -Wno-unused-parameter
+CFLAGS=-Wall -O3 -g -Wextra -Wno-unused-parameter --std=c++17
 CXX = g++
 CXXFLAGS=$(CFLAGS)
 OBJECTS=snake.o

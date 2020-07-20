@@ -32,6 +32,7 @@ class RetroMatrix {
 		int run_GOL();
 		int run_R30();
 		int run_ant();
+		int run_loop();
 		
 		RetroMatrix(rgb_matrix::Canvas *canvas, int rows, int cols);
 		

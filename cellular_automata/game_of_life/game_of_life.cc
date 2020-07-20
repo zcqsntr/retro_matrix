@@ -95,7 +95,7 @@ void GOLUpdate(int LED_matrix[64][64], string boundary_conditions = "looping", i
               } else if(col == - 1) { //left
                 c = 63;
                 r = row;
-              } else if(row == 32) { //bottom
+              } else if(row == 64) { //bottom
                 r = 0;
                 c = col;
               } else if(col == 64) { //right
@@ -104,7 +104,7 @@ void GOLUpdate(int LED_matrix[64][64], string boundary_conditions = "looping", i
               } else if(row == -1 and col == -1){ //top left
                 r = 31;
                 c = 63; 
-             } else if(row == 32 && col == -1) { //bottom left
+             } else if(row == 64 && col == -1) { //bottom left
                r = 0;
                c = 63;
             
@@ -112,7 +112,7 @@ void GOLUpdate(int LED_matrix[64][64], string boundary_conditions = "looping", i
                r = 31;
                c = 0;
             
-             } else if(row == 32 && col == 64) { //bottom right
+             } else if(row == 64 && col == 64) { //bottom right
                r = 0;
                c = 0;
             
