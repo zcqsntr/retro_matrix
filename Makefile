@@ -35,6 +35,7 @@ TETRIS_DIR = /home/pi/Desktop/retro_matrix/games/tetris
 GOL_DIR = /home/pi/Desktop/retro_matrix/cellular_automata/game_of_life
 R30_DIR = /home/pi/Desktop/retro_matrix/cellular_automata/rule30
 ANT_DIR = /home/pi/Desktop/retro_matrix/cellular_automata/langtons_ant
+LOOP_DIR = /home/pi/Desktop/retro_matrix/cellular_automata/langtons_loop
 
 MENU_DIR = /home/pi/Desktop/retro_matrix/menus
 
@@ -43,8 +44,8 @@ all : run_retro_matrix
 $(RGB_LIBRARY): FORCE
 	$(MAKE) -C $(RGB_LIBDIR)
 
-run_retro_matrix: run_retro_matrix.o retro_matrix.o main_menu.o start_menu.o cellular_automata_menu.o games_menu.o snake_menu.o snake.o tetris.o game_of_life.o rule_30.o ant.o $(RGB_LIBRARY) $(EVDEV_LIBRARY)
-	$(CXX) run_retro_matrix.o main_menu.o retro_matrix.o start_menu.o cellular_automata_menu.o games_menu.o snake_menu.o game_of_life.o snake.o tetris.o rule_30.o ant.o -o $@ $(LDFLAGS) 
+run_retro_matrix: run_retro_matrix.o retro_matrix.o menu.o start_menu.o snake.o loop.o tetris.o game_of_life.o rule_30.o ant.o $(RGB_LIBRARY) $(EVDEV_LIBRARY)
+	$(CXX) run_retro_matrix.o menu.o start_menu.o retro_matrix.o game_of_life.o snake.o loop.o tetris.o rule_30.o ant.o -o $@ $(LDFLAGS) 
 
 run_retro_matrix.o: run_retro_matrix.cc 
 	$(CXX) -o run_retro_matrix.o -I$(RGB_INCDIR) -I. -I$(GOL_DIR) -I$(MY_INCDIR)  -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -I$(MENU_DIR) -c run_retro_matrix.cc
@@ -52,20 +53,12 @@ run_retro_matrix.o: run_retro_matrix.cc
 retro_matrix.o: retro_matrix.cc 
 	$(CXX) -o retro_matrix.o -I$(RGB_INCDIR) -I. -I$(GOL_DIR) -I$(MY_INCDIR)  -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -I$(MENU_DIR) -c retro_matrix.cc
 
-main_menu.o: $(MENU_DIR)/main_menu.cc 
-	$(CXX) -o main_menu.o -I$(RGB_INCDIR) -I. -I$(GOL_DIR) -I$(MY_INCDIR)  -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -I$(MENU_DIR) -c $(MENU_DIR)/main_menu.cc
-	
-games_menu.o: $(MENU_DIR)/games_menu.cc 
-	$(CXX) -o games_menu.o -I$(MY_INCDIR) -I. -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) -I$(MENU_DIR) -I$(TETRIS_DIR) $(CXXFLAGS) $(LDLIBS) -c $(MENU_DIR)/games_menu.cc
+menu.o: $(MENU_DIR)/menu.cc 
+	$(CXX) -o menu.o -I$(RGB_INCDIR) -I. -I$(GOL_DIR) -I$(MY_INCDIR)  -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -I$(MENU_DIR) -c $(MENU_DIR)/menu.cc
+
 	
 start_menu.o: $(MENU_DIR)/start_menu.cc 
-	$(CXX) -o start_menu.o -I$(MY_INCDIR) -I. -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) -I$(MENU_DIR) $(CXXFLAGS) $(LDLIBS) -c $(MENU_DIR)/start_menu.cc
-
-snake_menu.o: $(MENU_DIR)/snake_menu.cc 
-	$(CXX) -o snake_menu.o -I$(SNAKE_DIR) -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(MENU_DIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -c $(MENU_DIR)/snake_menu.cc
-	
-cellular_automata_menu.o: $(MENU_DIR)/cellular_automata_menu.cc
-	$(CXX) -o cellular_automata_menu.o -I. -I$(ANT_DIR) -I$(R30_DIR) -I$(GOL_DIR) -I$(MENU_DIR) -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -c $(MENU_DIR)/cellular_automata_menu.cc
+	$(CXX) -o start_menu.o -I$(MY_INCDIR) -I. -I$(RGB_INCDIR) -I$(EVDEV_INCDIR) -I$(MENU_DIR) $(CXXFLAGS) $(LDLIBS) -c $(MENU_DIR)/start_menu.cc	
 
 snake.o: $(SNAKE_DIR)/snake.cc 
 	$(CXX) -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(MENU_DIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS)  -c $(SNAKE_DIR)/snake.cc
@@ -76,6 +69,9 @@ tetris.o: $(TETRIS_DIR)/tetris.cc
 game_of_life.o: $(GOL_DIR)/game_of_life.cc 
 	$(CXX) -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(MENU_DIR)  -I$(EVDEV_INCDIR) $(CXXFLAGS) -c $(GOL_DIR)/game_of_life.cc
 
+loop.o: $(LOOP_DIR)/langtons_loop.cc 
+	$(CXX) -o loop.o -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(MENU_DIR)  -I$(EVDEV_INCDIR) $(CXXFLAGS) -c $(LOOP_DIR)/langtons_loop.cc
+	
 ant.o: $(ANT_DIR)/ant.cc 
 	$(CXX) -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(MENU_DIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) -c $(ANT_DIR)/ant.cc
 	

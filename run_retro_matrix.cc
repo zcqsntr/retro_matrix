@@ -33,6 +33,8 @@
 #include <regex>
 
 
+
+
 int main(int argc, char *argv[]) {
   RGBMatrix::Options defaults;
   defaults.hardware_mapping = "adafruit-hat";  // or e.g. "adafruit-hat"
@@ -86,15 +88,15 @@ int main(int argc, char *argv[]) {
               struct libevdev *dv = NULL;
               int fd = open((char *)entry.path().c_str() , O_RDONLY|O_NONBLOCK);
               int rc = libevdev_new_from_fd(fd, &dv);
-              cout << entry << fd<<rc << endl;
+              
+              
+              if(rc == 0) { // on success
+                cout << entry << fd<<rc << endl;
               printf("Input device name: \"%s\"\n", libevdev_get_name(dv));
                       printf("Input device ID: bus %#x vendor %#x product %#x\n",
                          libevdev_get_id_bustype(dv),
                          libevdev_get_id_vendor(dv),
                          libevdev_get_id_product(dv));
-              
-              if(rc == 0) { // on success
-              
                 devices.push_back(((string)entry.path()).back());
               }
               
@@ -155,8 +157,8 @@ int main(int argc, char *argv[]) {
         cout << input.type<< endl;
         cout << inputs.size() << endl;
         if(input.type == 'p'){
-            
-            matrix.draw_main_menu();
+            cout <<"size: " <<matrix.menu_structure["MAIN"].size()<< endl;
+            matrix.draw_menu(matrix.menu_structure["MAIN"]);
             
         } else if(input.type == 'D'){
           

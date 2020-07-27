@@ -10,6 +10,7 @@
 #include "graphics.h"
 #include "mylib.h"
 #include "retro_matrix.h"
+
 #include <getopt.h>
 #include <string>
 
@@ -199,9 +200,10 @@ int RetroMatrix::run_loop(){
   Color green(0*brightness,255*brightness,0*brightness); // sqiggle
   Color red(255*brightness, 0*brightness, 0*brightness); //other squiggle 
   Color magenta(150*brightness, 0*brightness, 255*brightness); // cross
+  Color white(255*brightness, 255*brightness, 255*brightness);
   
   Color bg_color(0,0,0);
-  vector<Color> colours = {bg_color, dark_blue, green, orange, yellow, green,  magenta, red};
+  vector<Color> colours = {bg_color, dark_blue, green, orange, yellow, green,  white, red};
   
   
   rgb_matrix::Font font;
@@ -243,7 +245,7 @@ int RetroMatrix::run_loop(){
   int quit;
   int tn = 0;
   list <ControllerInput> inputs;
-  while (tn < 2000){
+  while (tn < 1200){
       
       inputs = get_inputs_from_ps4(dev);
       

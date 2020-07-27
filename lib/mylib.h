@@ -22,9 +22,36 @@ struct Point {
 
 struct Button {
   Point position; // left hand corner
-  char* text;
+  string label;
   bool is_selected; 
   
+};
+
+/*
+class Button {
+	public:
+    Point position;
+    string label;
+    bool is_selected;
+		Button(Point p, string l, bool s);
+		void (*run_target)();
+};
+
+
+class MenuButton: public Button{
+	vector<Button> targets_buttons;
+	public:
+		MenuButton(Point p, string l, bool s, vector<Button> tbs);
+		
+};
+*/
+
+class ActionButton: public Button {
+	
+	
+	public:
+		ActionButton(Point p, string l, bool s, void (*tf)());
+		
 };
 
 

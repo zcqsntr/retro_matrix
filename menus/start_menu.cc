@@ -36,7 +36,7 @@ using namespace std;
 
 
 int RetroMatrix::start_menu() {
-
+    cout << 1;
   int current_selected = 0;
  
   rgb_matrix::Font font;
@@ -44,7 +44,7 @@ int RetroMatrix::start_menu() {
     fprintf(stderr, "Couldn't load font \n");
   
   }
-  
+  cout << 2;
   // make buttons 
   Button resume_button{Point{2,2}, "RESUME", true};
   Button quit_button{Point{10,2}, "QUIT", false};
@@ -52,7 +52,7 @@ int RetroMatrix::start_menu() {
   vector<Button> buttons{resume_button, quit_button};
   
   int letter_spacing = 0;
-
+cout << 3;
   
   Color bg_color(0, 0, 0);
   Color bright_color(150*brightness, 0, 255*brightness);
@@ -66,6 +66,7 @@ int RetroMatrix::start_menu() {
   int fd;
   int rc;
   struct input_event ev;
+  cout << 4;
   while(true){
     
     
@@ -73,7 +74,7 @@ int RetroMatrix::start_menu() {
         inputs = get_inputs_from_ps4(dev);
       
     
-      
+   
       for(const auto &input: inputs){
         switch(input.type) {  // go from first input as unlikely to have multiple inputs perframes with no sleep
 
@@ -83,10 +84,12 @@ int RetroMatrix::start_menu() {
             break;
             
           case 'S':
+          ResetCanvas(canvas, n_rows, n_cols, bg_color);
             return 0;
             
           case 'E':
             if(input.value == 1) {
+              ResetCanvas(canvas, n_rows, n_cols, bg_color);
               return get_selected_button(buttons);// 0 for resume, 1 for quit
             }
           break;
