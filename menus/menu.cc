@@ -105,7 +105,7 @@ void RetroMatrix::draw_menu(vector<Button> buttons){
 		      
 		selected_button = get_selected_button(buttons);
 		button_target = buttons[selected_button].label;
-		ResetCanvas(canvas, 32, 64, bg_color);
+		ResetCanvas(canvas, 64, 64, bg_color);
 		// buttons that run programs
 		if(button_target.compare("1 PLAYER") ==0){
 		  one_p_snake();
@@ -122,11 +122,20 @@ void RetroMatrix::draw_menu(vector<Button> buttons){
 		}else if(button_target.compare("LANGTON'S LOOP") ==0){
 		  run_loop();
 		  
+		}else if(button_target.compare("SHUTDOWN") ==0){
+		  system("shutdown -P now");
+		  
+		}else if(button_target.compare("SPACE INVADERS") ==0){
+		  run_space_invaders();
+		
+		
+		  
 		  //menu buttons
 		} else {
 		  target_buttons = menu_structure[button_target];
 		  draw_menu(target_buttons);
 		}
+		ResetCanvas(canvas, n_rows, n_cols, bg_color);
               }
 	      draw_buttons(canvas, buttons, font, bright_color, dim_color);
 	      get_inputs_from_ps4(dev); //clear input buffer

@@ -4,7 +4,7 @@
 #include <vector>
 #include <list>
 #include "libevdev.h"
-
+#include <math.h>
 
 using rgb_matrix::Font;
 using rgb_matrix::Canvas;
@@ -334,3 +334,21 @@ int get_direction_from_inputs(list <ControllerInput> inputs){
       return dir;
 }
 
+Color random_colour() {
+    float r = (float)random(0, 255);
+    float g = (float)random(0, 255);
+    float b = (float)random(0, 255);
+    
+    
+    
+    float mag = sqrt(pow(r, 2) + pow(g, 2) + pow(b, 2));
+    
+    r = r/mag *255;
+    g = g/mag *255;
+    b = b/mag *255;
+    
+    
+    Color pixel_color = Color(r,g,b);
+    return pixel_color;
+  
+}

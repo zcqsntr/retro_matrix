@@ -416,7 +416,7 @@ int RetroMatrix::run_tetris() {
   //rgb_matrix::DrawText(canvas, font, 0, 8 + font.baseline(), bg_color, &bg_color, to_string(score).c_str(), letter_spacing);
   int t = 100;
   int i = 0;
-  list <ControllerInput> inputs;
+  
   int dir;
   
 
@@ -489,7 +489,7 @@ int RetroMatrix::run_tetris() {
     
     myfile.close();
   }
-  
+  list <ControllerInput> inputs;
   
   Color score_color(0,150,0);
   Color high_score_color(150, 150, 0);
@@ -498,8 +498,8 @@ int RetroMatrix::run_tetris() {
   int score = 0;
   
   // draw current and hiugh score 
-  draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
-  draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
+  draw_text(canvas, font, 8 + font.baseline(), 1,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+  draw_text(canvas, font, 14+2* font.baseline(), 1, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
   //active_piece.pos.row -= active_piece.length/2;
   //active_piece.pos.col -= active_piece.width/2;
   int frame_skip = 20;
@@ -512,29 +512,32 @@ int RetroMatrix::run_tetris() {
     inputs = get_inputs_from_ps4(dev);
     // read inputs 
     for(const auto &input: inputs){
-      if(input.type == 'N' && input.value == 1) {
-        rot = (rotation + 1)%4;
-        
-        
-        
-      } else if(input.type == 'E' && input.value == 1) {
-        rot = rotation -1; 
-        if (rot== -1) {
-          rot = 3;
-        }
-      }
-      
      
-      
       switch(input.type) {  // go from first input as unlikely to have multiple inputs perframes with no sleep
+        
+            case 'N':
+              if (input.value == 1) {
+                rot = (rotation + 1)%4;
+              }
+              
+              break;
+            case 'E':
+              if(input.value == 1) {
+                rot = rotation -1; 
+                if (rot== -1) {
+                  rot = 3;
+                }
+              }
+            
+              break;
             case 'p':
               quit = start_menu();
               if(quit) {
                 return 0;
               } else{
-                ResetCanvas(canvas, 32, 64, bg_color);
-                draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
-                draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
+                ResetCanvas(canvas, 64, 64, bg_color);
+                draw_text(canvas, font, 8 + font.baseline(), 1,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+                draw_text(canvas, font, 14+2* font.baseline(), 1, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
               }
               break;
             case 'D': // controller disconnect
@@ -542,9 +545,9 @@ int RetroMatrix::run_tetris() {
               if(quit) {
                 return 0;
               } else{
-                ResetCanvas(canvas, 32, 64, bg_color);
-                draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
-                draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
+                ResetCanvas(canvas, 64, 64, bg_color);
+                draw_text(canvas, font, 8 + font.baseline(), 1,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+                draw_text(canvas, font, 14+2* font.baseline(), 1, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
               }
            
               break;
@@ -596,8 +599,8 @@ int RetroMatrix::run_tetris() {
     
     add_shape(board, active_piece);
     draw_board(canvas, board, board_pos, scale, portrait, brightness);
-    draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
-    draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
+    draw_text(canvas, font, 8 + font.baseline(), 1,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+    draw_text(canvas, font, 14+2* font.baseline(), 1, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
     
    
     
@@ -669,8 +672,8 @@ int RetroMatrix::run_tetris() {
         if(score > high_score) {
           high_score = score;
         }
-        draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
-        draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
+        draw_text(canvas, font, 8 + font.baseline(), 1,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+        draw_text(canvas, font, 14+2* font.baseline(), 1, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
         
          //remove the complete lines
         remove_lines(board, completed_lines);
@@ -698,8 +701,8 @@ int RetroMatrix::run_tetris() {
           }
           add_shape(board, active_piece);
           draw_board(canvas, board, board_pos, scale, portrait, brightness);
-          draw_text(canvas, font, 8 + font.baseline(), 0,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
-          draw_text(canvas, font, 14+2* font.baseline(), 0, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
+          draw_text(canvas, font, 8 + font.baseline(), 1,  score_color, bg_color, (char *)to_string(score).c_str(), letter_spacing);
+          draw_text(canvas, font, 14+2* font.baseline(), 1, high_score_color, bg_color, (char *)to_string(high_score).c_str(), letter_spacing);
           usleep(50 * 100000);
           
           return 0;

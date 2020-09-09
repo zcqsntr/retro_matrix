@@ -35,6 +35,7 @@
 
 
 
+
 int main(int argc, char *argv[]) {
   RGBMatrix::Options defaults;
   defaults.hardware_mapping = "adafruit-hat";  // or e.g. "adafruit-hat"
@@ -160,10 +161,9 @@ int main(int argc, char *argv[]) {
             cout <<"size: " <<matrix.menu_structure["MAIN"].size()<< endl;
             matrix.draw_menu(matrix.menu_structure["MAIN"]);
             
-        } else if(input.type == 'D'){
+        } else if(input.type == 'D'){ // disconnect
           
-          int fd = open("/dev/input/event6", O_RDONLY|O_NONBLOCK);
-          int rc = libevdev_new_from_fd(fd, &matrix.dev);
+          connected_contr -= 1;
         }
       }
     }

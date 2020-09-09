@@ -29,11 +29,13 @@ class RetroMatrix {
 		void one_p_snake();
 		void two_p_snake();
 		int run_tetris();
+		int run_space_invaders();
 		
 		int run_GOL();
 		int run_R30();
 		int run_ant();
 		int run_loop();
+		int draw_weather();
 		
 		std::map<std::string, std::vector<Button>> menu_structure;
 		

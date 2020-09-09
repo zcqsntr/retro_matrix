@@ -53,9 +53,10 @@ RetroMatrix::RetroMatrix(rgb_matrix::Canvas* cv, int rows, int cols) {
 	  
 	  // make buttons 
 	  Button snake_button{Point{2,2}, "SNAKE", true};
-	  Button tetris_button{Point{25,2}, "TETRIS", false};
+	  Button tetris_button{Point{13,2}, "TETRIS", false};
+	  Button space_button{Point{25,2}, "SPACE INVADERS", false};
 	  
-	  vector<Button> games_buttons{snake_button, tetris_button};
+	  vector<Button> games_buttons{snake_button, tetris_button, space_button};
 	  
 	  // make buttons 
 	  Button GOL_button{Point{2,2}, "GAME OF LIFE", true};
@@ -69,11 +70,12 @@ RetroMatrix::RetroMatrix(rgb_matrix::Canvas* cv, int rows, int cols) {
 	  
 	  // make buttons 
 	  Button games_button{Point{2,2}, "GAMES", true};
-	  Button automata_button{Point{25,2}, "AUTOMATA", false};
+	  Button automata_button{Point{13,2}, "AUTOMATA", false};
+	  Button shutdown_button{Point{25,2}, "SHUTDOWN", false};
 	  
 	  
 	  
-	  vector<Button> main_buttons{games_button, automata_button};
+	  vector<Button> main_buttons{games_button, automata_button, shutdown_button};
   
   
 		

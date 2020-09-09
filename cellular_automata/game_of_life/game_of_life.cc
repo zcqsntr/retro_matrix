@@ -341,21 +341,9 @@ int RetroMatrix::run_GOL() {
   int quit;
   while(true){
     int t = 0;
-    float r = (float)random(0, 255);
-    float g = (float)random(0, 255);
-    float b = (float)random(0, 255);
+   
     
-    
-    
-    float mag = sqrt(pow(r, 2) + pow(g, 2) + pow(b, 2));
-    
-    r = r/mag *255;
-    g = g/mag *255;
-    b = b/mag *255;
-    
-    cout << r << " " << g << " " << b << endl;
-    
-    pixel_color = Color(r,g,b);
+    pixel_color = random_colour();
     
       RandomICs2D(LED_matrix, 0.2);
     while (t < 500){
