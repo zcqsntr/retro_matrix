@@ -123,7 +123,7 @@ void RetroMatrix::draw_menu(vector<Button> buttons){
 		  run_loop();
 		  
 		}else if(button_target.compare("SHUTDOWN") ==0){
-		  system("shutdown now");
+		  system("sudo shutdown now");
 		  
 		}else if(button_target.compare("SPACE INVADERS") ==0){
 		  run_space_invaders();
