@@ -22,7 +22,7 @@ Note that this is a very early version and the install process is not at all str
 
 ## Dependencies:
 * [rpi-rgb-led-matrix](https://github.com/hzeller/rpi-rgb-led-matrix)
-* libevdev
+* [libevdev](https://www.freedesktop.org/wiki/Software/libevdev/)
 
 
 
