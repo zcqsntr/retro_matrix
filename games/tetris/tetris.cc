@@ -37,7 +37,7 @@
 
 
 
-using rgb_matrix::GPIO;
+//using rgb_matrix::GPIO;
 using rgb_matrix::RGBMatrix;
 using rgb_matrix::Canvas;
 using rgb_matrix::Font;

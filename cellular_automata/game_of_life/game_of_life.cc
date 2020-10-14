@@ -33,7 +33,7 @@
 #include "libevdev.h"
 #include <fstream>
 
-using rgb_matrix::GPIO;
+//using rgb_matrix::GPIO;
 using rgb_matrix::RGBMatrix;
 using rgb_matrix::Canvas;
 

@@ -1,12 +1,12 @@
 CFLAGS=-Wall -O3 -g -Wextra -Wno-unused-parameter --std=c++17
 CXX = g++
 CXXFLAGS=$(CFLAGS)
-OBJECTS=main_menu.o include.o
+
 BINARIES=main_menu include
 
 # Where our library resides. You mostly only need to change the
 # RGB_LIB_DISTRIBUTION, this is where the library is checked out.
-RGB_LIB_DISTRIBUTION=/home/pi/Desktop/LED_matrix/rpi-rgb-led-matrix
+RGB_LIB_DISTRIBUTION=/home/pi/Desktop/retro_matrix/rpi-rgb-led-matrix
 RGB_INCDIR=$(RGB_LIB_DISTRIBUTION)/include
 RGB_LIBDIR=$(RGB_LIB_DISTRIBUTION)/lib
 RGB_LIBRARY_NAME=rgbmatrix
@@ -40,13 +40,15 @@ LOOP_DIR = /home/pi/Desktop/retro_matrix/cellular_automata/langtons_loop
 
 MENU_DIR = /home/pi/Desktop/retro_matrix/menus
 
+DIRS = SNAKE_DIR SPACE_DIR TETRIS_DIR GOL_DIR R30_DIR ANT_DIR LOOP_DIR MENU_DIR
+
+OBJECTS=run_retro_matrix.o retro_matrix.o menu.o start_menu.o snake.o space.o loop.o tetris.o game_of_life.o rule_30.o ant.o
+
+
 all : run_retro_matrix
 
-$(RGB_LIBRARY): FORCE
-	$(MAKE) -C $(RGB_LIBDIR)
-
-run_retro_matrix: run_retro_matrix.o retro_matrix.o menu.o start_menu.o snake.o space.o loop.o tetris.o game_of_life.o rule_30.o ant.o $(RGB_LIBRARY) $(EVDEV_LIBRARY)
-	$(CXX) run_retro_matrix.o menu.o start_menu.o retro_matrix.o game_of_life.o snake.o space.o loop.o tetris.o rule_30.o ant.o -o $@ $(LDFLAGS) 
+run_retro_matrix: $(OBJECTS) $(RGB_LIBRARY) $(EVDEV_LIBRARY)
+	$(CXX) $(OBJECTS) -o $@ $(LDFLAGS) 
 
 run_retro_matrix.o: run_retro_matrix.cc 
 	$(CXX) -o run_retro_matrix.o -I$(RGB_INCDIR) -I. -I$(GOL_DIR) -I$(MY_INCDIR)  -I$(EVDEV_INCDIR) $(CXXFLAGS) $(LDLIBS) -I$(MENU_DIR) -c run_retro_matrix.cc
@@ -74,14 +76,14 @@ game_of_life.o: $(GOL_DIR)/game_of_life.cc
 	$(CXX) -o game_of_life.o -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(MENU_DIR)  -I$(EVDEV_INCDIR) $(CXXFLAGS) -c $(GOL_DIR)/game_of_life.cc
 
 loop.o: $(LOOP_DIR)/langtons_loop.cc 
-	$(CXX) -o loop.o -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(MENU_DIR)  -I$(EVDEV_INCDIR) $(CXXFLAGS) -c $(LOOP_DIR)/langtons_loop.cc
+	$(CXX) -o loop.o -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(MENU_DIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) -c $(LOOP_DIR)/langtons_loop.cc
 	
 ant.o: $(ANT_DIR)/ant.cc 
 	$(CXX) -o ant.o -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(MENU_DIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) -c $(ANT_DIR)/ant.cc
 	
 	
 rule_30.o: $(R30_DIR)/rule_30.cc 
-	$(CXX) -o rule_30.o-I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(MENU_DIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) -c $(R30_DIR)/rule_30.cc
+	$(CXX) -o rule_30.o -I. -I$(MY_INCDIR) -I$(RGB_INCDIR) -I$(MENU_DIR) -I$(EVDEV_INCDIR) $(CXXFLAGS) -c $(R30_DIR)/rule_30.cc
 
 clean:
 	rm *.o

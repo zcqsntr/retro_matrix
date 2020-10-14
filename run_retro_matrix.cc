@@ -38,12 +38,12 @@
 
 int main(int argc, char *argv[]) {
   RGBMatrix::Options defaults;
-  defaults.hardware_mapping = "adafruit-hat";  // or e.g. "adafruit-hat"
-  defaults.rows = 64;
-  defaults.cols = 64;
-  defaults.chain_length = 1;
-  defaults.parallel = 1;
-  defaults.show_refresh_rate = false;
+  //defaults.hardware_mapping = "adafruit-hat";  // or e.g. "adafruit-hat"
+  //defaults.rows = 64;
+  //defaults.cols = 64;
+  //defaults.chain_length = 1;
+  //defaults.parallel = 1;
+  //defaults.show_refresh_rate = false;
   
   // use --led-slowdown-gpio=4
   

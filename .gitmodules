@@ -1,0 +1,6 @@
+[submodule "rpi-rgb-led-matrix"]
+	path = rpi-rgb-led-matrix
+	url = https://github.com/hzeller/rpi-rgb-led-matrix
+[submodule "libevdev"]
+	path = libevdev
+	url = https://github.com/freedesktop/libevdev
