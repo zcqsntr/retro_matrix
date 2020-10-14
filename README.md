@@ -25,14 +25,15 @@ This is a C++ apllication that runs various cellular automata and retro games on
 
 Note that this is a very early version and the install process is not at all streamlined. It wont be too difficult if you have some experience with compiling C++ libraries though. The binary is currently in the repository so you might not even need to compile.
 
-1) Install the dependancies below and change the Makefile to point to the libraries. 
-2) ./setup.sh to run the compilation and a command that reduces flickering 
-3) ./run_retro_matrix
-4) fix any bugs you have during this process
-5) (optional)  3D print the case found here https://www.thingiverse.com/thing:4605737
+1) Install the dependancies below and change the Makefile in the main directory to point to your libevdev (lines 15-19), I'm working on integrating this as a submodule as well. 
+2) ~/setup.sh to run the compilation and a command that reduces flickering
+3) To get the matrix library working on your matrix go to ./rpi-rgb-led-matrix/examples-api-use and see README there about running the demos, also see README in main ~/rpi-rgb-led-matrix directory for more info
+4) ~/run_retro_matrix using the same commands line options that were required for the rpi-rgb-led-matrix demos to work with your matrix
+5) hopefully this works! Try running python ~/reset_matrix.py if not, it resets the matrix registers. In ~/run there is a script I use to do this before running the program, edit this with your required command line options from step 3 if desired.
+6) Hopefully it works now!
+6) (optional)  3D print the case found here https://www.thingiverse.com/thing:4605737
 
 ## Dependencies:
-* [rpi-rgb-led-matrix](https://github.com/hzeller/rpi-rgb-led-matrix)
 * [libevdev](https://www.freedesktop.org/wiki/Software/libevdev/)
 
 
