@@ -1,4 +1,7 @@
 # retro_matrix
+
+Follow me on Instagram for more projects! [@neyth_makes](http://instagram.com/neyth_makes/)
+
 This is a C++ apllication that runs various cellular automata and retro games on a raspberry Pi and an LED matrix. It can be controlled using a controller, I have used a PS4, and Nintendo Switch Pro controller successfully. Consider this a pre alpha version, install and play around with it if you are interested, but it doesn't function as a finished product yet. This requires a raspberry Pi, I have tested on the Pi 4 and a headless Pi zero. The Pi 4 works flawlessly, the Pi zero works alright for some of the cellular automata, but the games are too laggy to play. This was written for a 64x64 matrix, but have also tried most of it on a 32x64 matrix. This isnt officially supported right now and requires editing the code but try it if you like. It can also interface with an iPad companion [app](https://github.com/zcqsntr/retro_matrix_companion) I wrote, the code for this is in the networking folder. The iPad app allows you to paint individual pixels and communicates these over a local network to the matrix.
 
 ## Games 
