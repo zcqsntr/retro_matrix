@@ -28,7 +28,8 @@ def messageDecoder(client, userdata, msg):
     
         
 clientName = "RPI"
-serverAddress = "192.168.43.141"
+serverAddress = "192.168.198.141"
+
 
 mqttClient = mqtt.Client(clientName)
 
@@ -36,6 +37,8 @@ mqttClient.on_connect = connectionStatus
 mqttClient.on_message = messageDecoder
 
 mqttClient.connect(serverAddress)
+
+print('connected')
 mqttClient.loop_forever()
 
 

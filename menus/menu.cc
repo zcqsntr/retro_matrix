@@ -73,7 +73,7 @@ void RetroMatrix::draw_menu(vector<Button> buttons){
   
   int selected_button = get_selected_button(buttons);
   list <ControllerInput> inputs;
-  ResetCanvas(canvas, 32, 64, bg_color);
+  ResetCanvas(canvas, 64, 64, bg_color);
   draw_buttons(canvas, buttons, font, bright_color, dim_color);
   get_inputs_from_ps4(dev); //clear input buffer
   int fd;

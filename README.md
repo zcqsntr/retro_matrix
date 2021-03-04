@@ -23,13 +23,21 @@ This is a C++ apllication that runs various cellular automata and retro games on
 
 ## Install instructions
 
-Note that this is a very early version and the install process is not at all streamlined. It wont be too difficult if you have some experience with compiling C++ libraries though. The binary is currently in the repository so you might not even need to compile.
+If you don't need to recompile it just try running:
 
-1) Install the dependancies below and change the Makefile to point to the libraries. 
-2) ./setup.sh to run the compilation and a command that reduces flickering 
-3) ./run_retro_matrix
-4) fix any bugs you have during this process
-5) (optional)  3D print the case found here https://www.thingiverse.com/thing:4605737
+./run_retro_matrix <args>
+
+where args are the arguments required to get the rgb-rpi demos working, e.g. I use 
+
+./run_retro_matrix --led-slowdown-gpio=4 --led-gpio-mapping=adafruit-hat
+
+If you need to recompile:
+
+cd libevdev
+./autogen.sh this will install libevdev in the default location which is hardcoded in the Makefiles, if it is anywhere else app won't compile
+cd ..
+make 
+
 
 ## Dependencies:
 * [rpi-rgb-led-matrix](https://github.com/hzeller/rpi-rgb-led-matrix)

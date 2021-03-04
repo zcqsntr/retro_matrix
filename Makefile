@@ -6,7 +6,7 @@ BINARIES=main_menu include
 
 # Where our library resides. You mostly only need to change the
 # RGB_LIB_DISTRIBUTION, this is where the library is checked out.
-RGB_LIB_DISTRIBUTION=/home/pi/Desktop/retro_matrix/rpi-rgb-led-matrix
+RGB_LIB_DISTRIBUTION=./rpi-rgb-led-matrix
 RGB_INCDIR=$(RGB_LIB_DISTRIBUTION)/include
 RGB_LIBDIR=$(RGB_LIB_DISTRIBUTION)/lib
 RGB_LIBRARY_NAME=rgbmatrix
@@ -20,7 +20,7 @@ EVDEV_LIBRARY=$(EVDEV_LIBDIR)/lib$(EVDEV_LIBRARY_NAME).a
 
 
 
-MY_INCDIR = /home/pi/Desktop/retro_matrix/lib
+MY_INCDIR = ./lib
 MY_LIB = retromatrix
 
 LDFLAGS+=-lstdc++fs
@@ -29,16 +29,18 @@ LDFLAGS+=-L$(RGB_LIBDIR) -l$(RGB_LIBRARY_NAME) -lrt -lm -lpthread
 LDFLAGS+= -L$(EVDEV_LIBDIR) -l$(EVDEV_LIBRARY_NAME) 
 
 
-SNAKE_DIR = /home/pi/Desktop/retro_matrix/games/snake
-SPACE_DIR = /home/pi/Desktop/retro_matrix/games/space_invaders
-TETRIS_DIR = /home/pi/Desktop/retro_matrix/games/tetris
+SNAKE_DIR = ./games/snake
+SPACE_DIR = ./games/space_invaders
+TETRIS_DIR = ./games/tetris
 
-GOL_DIR = /home/pi/Desktop/retro_matrix/cellular_automata/game_of_life
-R30_DIR = /home/pi/Desktop/retro_matrix/cellular_automata/rule30
-ANT_DIR = /home/pi/Desktop/retro_matrix/cellular_automata/langtons_ant
-LOOP_DIR = /home/pi/Desktop/retro_matrix/cellular_automata/langtons_loop
+GOL_DIR = ./cellular_automata/game_of_life
+R30_DIR = ./cellular_automata/rule30
+ANT_DIR = ./cellular_automata/langtons_ant
+LOOP_DIR = ./cellular_automata/langtons_loop
 
-MENU_DIR = /home/pi/Desktop/retro_matrix/menus
+MENU_DIR = ./menus
+
+BUILD_DIR = ./build
 
 DIRS = SNAKE_DIR SPACE_DIR TETRIS_DIR GOL_DIR R30_DIR ANT_DIR LOOP_DIR MENU_DIR
 

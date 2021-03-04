@@ -5,6 +5,7 @@
 #include <list>
 #include "libevdev.h"
 #include <math.h>
+#include <iostream>
 
 using rgb_matrix::Font;
 using rgb_matrix::Canvas;
@@ -199,8 +200,16 @@ ControllerInput parse_ps4_input(struct input_event ev){
       }
       
     
+    
+    // bumpers for zero 2
+    } else if (input_string.compare("BTN_WEST") == 0){
+    type = 'l';
+    value = ev.value;
+  } else if (input_string.compare("BTN_Z") == 0){
+    type = 'r';
+    value = ev.value;
+    
     /*
-    // bumpers
   } else if (input_string.compare("BTN_TL") == 0){
     type = 'l';
     value = ev.value;
@@ -236,7 +245,40 @@ ControllerInput parse_ps4_input(struct input_event ev){
   
 }
 
+ControllerInput parse_keyboard_input_CHIP8(struct input_event ev){
+  
+  string input_string = string(libevdev_event_code_get_name(ev.type, ev.code));
+ 
+  
+  int type;
+  int value; 
+  type = input_string.back();
+  value = ev.value;
+  
+ 
+  ControllerInput input{type, value};
+  return input;
+  
+}
 
+list<ControllerInput> get_CHIP8_inputs(struct libevdev *dev){
+      struct input_event ev;
+      int rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
+      list<ControllerInput> inputs;
+      
+      while(rc == 0) { // get all events since last iteration of game loop 
+        ControllerInput input = parse_keyboard_input_CHIP8(ev);
+        
+        if(input.type != -1){
+          inputs.push_back(input);
+         }
+         
+        rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev);  
+      }
+      
+      
+      return inputs;
+}
 list<ControllerInput> get_inputs_from_ps4(struct libevdev *dev){
       struct input_event ev;
       int rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev);

@@ -37,15 +37,15 @@
 
 
 int main(int argc, char *argv[]) {
-  RGBMatrix::Options defaults;
+  RGBMatrix::Options defaults; 
   //defaults.hardware_mapping = "adafruit-hat";  // or e.g. "adafruit-hat"
-  //defaults.rows = 64;
-  //defaults.cols = 64;
-  //defaults.chain_length = 1;
+  defaults.rows = 64;
+  defaults.cols = 64;
+  defaults.chain_length = 1;
   //defaults.parallel = 1;
   //defaults.show_refresh_rate = false;
   
-  // use --led-slowdown-gpio=4
+  // use --led-slowdown-gpio=4 --led-gpio-mapping=adafruit-hat
   
   Canvas *canvas = rgb_matrix::CreateMatrixFromFlags(&argc, &argv, &defaults);
   if (canvas == NULL)

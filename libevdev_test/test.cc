@@ -127,8 +127,13 @@ int main(int argc, char **argv)
     // ps4 controller "/dev/input/event6"
     // keyboard "/dev/input/event0"
     
-    fd = open("/dev/input/event4", O_RDONLY|O_NONBLOCK);
+    fd = open("/dev/input/event0", O_RDONLY|O_NONBLOCK);
     rc = libevdev_new_from_fd(fd, &dev);
+    
+    
+    
+    
+    
     cout << rc << endl;
     if (rc < 0) {
             fprintf(stderr, "Failed to init libevdev (%s)\n", strerror(-rc));
@@ -163,12 +168,16 @@ int main(int argc, char **argv)
             
             rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
             
+            
    
-            if (rc == 0 && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("SYN_REPORT") == 0))// && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_X") == 0) && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_Y") == 0) && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_RY") == 0)&& !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_RX") == 0))
+            if (rc == 0 && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("SYN_REPORT") == 0)){// && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_X") == 0) && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_Y") == 0) && !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_RY") == 0)&& !(string(libevdev_event_code_get_name(ev.type, ev.code)).compare("ABS_RX") == 0))
                     printf("Event: %s %s %d\n",
                            libevdev_event_type_get_name(ev.type),
                            libevdev_event_code_get_name(ev.type, ev.code),
                            ev.value);
+                           string input_string = string(libevdev_event_code_get_name(ev.type, ev.code));
+                           cout << (int)input_string.back()<<endl;;
+                         }
     } while (rc == 1 || rc == 0 || rc == -EAGAIN || rc == -19);
     
 }   
