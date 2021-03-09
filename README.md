@@ -39,7 +39,7 @@ then create a directory and inside that directory run
 git clone https://github.com/zcqsntr/retro_matrix --recursive
 ```
 
-If this doesn't work try the step below. 
+If the application doesn't run after you've done this try the steps below. 
 
 If you need to recompile for any reason then you need to setup libevdev first: 
 
