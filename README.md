@@ -26,7 +26,19 @@ This is a C++ apllication that runs various cellular automata and retro games on
 
 ## Install instructions
 
-If you don't need to recompile it just try running:
+If you don't need to recompile first install git and libevdev:
+
+sudo apt-get update
+sudo apt-get install git
+sudo apt-get install -y libevdev-tools
+
+then create a directory and inside that directory run
+
+git clone https://github.com/zcqsntr/retro_matrix --recursive
+
+
+Then to run the application you need to run (from the root retro_matrix directory)
+
 
 ./run_retro_matrix <args>
 
@@ -34,12 +46,9 @@ where args are the arguments required to get the rgb-rpi demos working, e.g. I u
 
 ./run_retro_matrix --led-slowdown-gpio=4 --led-gpio-mapping=adafruit-hat
 
+If this doesn't work try the step below. 
 
-sudo apt-get update
-sudo apt-get install git
-git clone https://github.com/zcqsntr/retro_matrix --recursive
-sudo apt-get install -y libevdev-tools
-
+If you need to recompile for any reason then you need to setup libevdev first: 
 
 sudo apt-get install autoconf
 sudo apt-get install libtool
@@ -49,6 +58,7 @@ cd libevdev
 make
 make install
 
+Then run my setup script which compiles everything and runs a command on the excecutable to reduce flickering. 
 cd ..
 ./setup
 
