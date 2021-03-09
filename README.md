@@ -34,18 +34,25 @@ where args are the arguments required to get the rgb-rpi demos working, e.g. I u
 
 ./run_retro_matrix --led-slowdown-gpio=4 --led-gpio-mapping=adafruit-hat
 
-If you need to recompile:
+
+sudo apt-get update
+sudo apt-get install git
 git clone https://github.com/zcqsntr/retro_matrix --recursive
+sudo apt-get install -y libevdev-tools
+
+
 sudo apt-get install autoconf
 sudo apt-get install libtool
-
 cd libevdev
-./autogen.sh this will install libevdev in the default location which is hardcoded in the Makefiles, if it is anywhere else app won't compile
-cd ..
-make 
+./autogen.sh 
+./configure
+make
+make install
 
-sudo apt-get update -y
-sudo apt-get install -y libevdev-tools
+cd ..
+./setup
+
+
 
 
 
