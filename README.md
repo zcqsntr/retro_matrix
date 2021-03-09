@@ -39,18 +39,6 @@ then create a directory and inside that directory run
 git clone https://github.com/zcqsntr/retro_matrix --recursive
 ```
 
-Then to run the application you need to run (from the root retro_matrix directory)
-
-```console
-./run_retro_matrix <args>
-```
-
-where args are the arguments required to get the rgb-rpi demos working, e.g. I use on a Pi3 and Pi4
-
-```console
-./run_retro_matrix --led-slowdown-gpio=4 --led-gpio-mapping=adafruit-hat
-```
-
 If this doesn't work try the step below. 
 
 If you need to recompile for any reason then you need to setup libevdev first: 
@@ -72,8 +60,20 @@ cd ..
 ./setup
 ```
 
+## Run instructions
+Then to run the application you need to run (from the root retro_matrix directory)
 
+```console
+./run_retro_matrix <args>
+```
 
+where args are the arguments required to get the rgb-rpi demos working, e.g. I use on a Pi3 and Pi4
+
+```console
+./run_retro_matrix --led-slowdown-gpio=4 --led-gpio-mapping=adafruit-hat
+```
+
+You should get some console output. To start the application you need to connect a controller via bluetooth and press the start button, if start doesn't work try pressing random buttons as the input mapping might be slightly different on different controllers. (I'm working on keyboard support as well)
 
 ## Dependencies:
 * [libevdev](https://www.freedesktop.org/wiki/Software/libevdev/)
