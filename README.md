@@ -30,7 +30,7 @@ If you don't need to recompile it just try running:
 
 ./run_retro_matrix <args>
 
-where args are the arguments required to get the rgb-rpi demos working, e.g. I use 
+where args are the arguments required to get the rgb-rpi demos working, e.g. I use on a Pi3 and Pi4
 
 ./run_retro_matrix --led-slowdown-gpio=4 --led-gpio-mapping=adafruit-hat
 
