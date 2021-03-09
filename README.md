@@ -16,7 +16,7 @@ This is a C++ apllication that runs various cellular automata and retro games on
 * Langton's loop
 
 ## You will need
-* Raspberry Pi, preferably better than a Pi zero
+* Raspberry Pi, preferably better than a Pi zero. Tested oon Pi3A, Pi4 and Pi0. All work although the 0 is quite laggy
 * [LED matrix](https://shop.pimoroni.com/products/rgb-led-matrix-panel?variant=3029531983882), 64x64 is currently the only supported size
 * A Nintendo Switch Pro controller, PS4 controller or it also works with one of these cheaper [controllers](https://www.amazon.co.uk/8BitDo-Wireless-Bluetooth-Controller-Powerful/dp/B083FJLVLH/ref=sr_1_17_sspa?dchild=1&keywords=8bitdo+controller&qid=1601051019&sr=8-17-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEzME5UMFlLRTVTMzVSJmVuY3J5cHRlZElkPUEwOTQwMTY2MkJWQURBNjhORUE0QSZlbmNyeXB0ZWRBZElkPUEwMjQ5OTMzMUZHSk1GRUFSNjg4NCZ3aWRnZXROYW1lPXNwX210ZiZhY3Rpb249Y2xpY2tSZWRpcmVjdCZkb05vdExvZ0NsaWNrPXRydWU=) 
 * (recommended) matrix hat or [bonnet](https://shop.pimoroni.com/products/adafruit-rgb-matrix-bonnet-for-raspberry-pi), so you don't have to wire it to the GPIO pins yourself 
