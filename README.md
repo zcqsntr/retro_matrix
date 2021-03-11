@@ -41,6 +41,9 @@ sudo apt-get install libtool
 
 cd libevdev
 ./autogen.sh this will install libevdev in the default location which is hardcoded in the Makefiles, if it is anywhere else app won't compile
+
+make (might not be needed)
+sudo make install
 cd ..
 make 
 

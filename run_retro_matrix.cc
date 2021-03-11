@@ -113,8 +113,18 @@ int main(int argc, char *argv[]) {
                           matrix.dev1 = dv;
                           connected_contr = 2;
                         }
-              }
-              
+              } else if(rc == 0 && libevdev_has_event_code(dv, EV_KEY, KEY_ESC)) { // is the beyboard 
+                cout << " is a keyboard"<< endl;
+                         
+                        
+                        if (connected_contr == 0) {
+                            matrix.dev = dv;
+                            connected_contr = 1;
+                        } else {
+                          matrix.dev1 = dv;
+                          connected_contr = 2;
+                        }
+            }
                              
           }
                             

@@ -43,7 +43,7 @@ mylib.o: mylib.cc
 
 
 clean:
-	rm -f $(OBJECTS) $(BINARIES)
+	rm -f *.a *.o
 
 FORCE:
 .PHONY: FORCE

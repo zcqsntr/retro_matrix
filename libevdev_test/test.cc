@@ -127,7 +127,7 @@ int main(int argc, char **argv)
     // ps4 controller "/dev/input/event6"
     // keyboard "/dev/input/event0"
     
-    fd = open("/dev/input/event0", O_RDONLY|O_NONBLOCK);
+    fd = open("/dev/input/event1", O_RDONLY|O_NONBLOCK);
     rc = libevdev_new_from_fd(fd, &dev);
     
     

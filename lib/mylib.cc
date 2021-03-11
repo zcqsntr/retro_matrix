@@ -132,6 +132,10 @@ void SetPixels(Canvas *canvas, int LED_matrix[64][64], Color color, int n_rows =
 
 
 ControllerInput parse_ps4_input(struct input_event ev){
+  /*
+   gets input from either controller type or keyboard, really bad coding but cba
+   */
+  
   
   string input_string = string(libevdev_event_code_get_name(ev.type, ev.code));
  
@@ -232,8 +236,60 @@ ControllerInput parse_ps4_input(struct input_event ev){
     type = 'p';
     value = ev.value;
     
-    // input we arent interested in 
-  } else {
+    //keyboard inputs 
+  } else if  (input_string.compare("KEY_A") == 0) {
+    type = 'x';
+    if(ev.value == 1) {
+      value = -1; 
+    } else if (ev.value == 0) {
+      value = 0;
+    }
+  } else if  (input_string.compare("KEY_D") == 0) {
+    type = 'x';
+    if(ev.value == 1) {
+      value = 1; 
+    } else if (ev.value == 0) {
+      value = 0;
+    }
+    
+    } else if  (input_string.compare("KEY_S") == 0) {
+    type = 'y';
+    if(ev.value == 1) {
+      value = 1; 
+    } else if (ev.value == 0) {
+      value = 0;
+    }
+    
+    } else if  (input_string.compare("KEY_W") == 0) {
+    type = 'y';
+    if(ev.value == 1) {
+      value = -1; 
+    } else if (ev.value == 0) {
+      value = 0;
+    }
+    } else if  (input_string.compare("KEY_SPACE") == 0) {
+    type = 'E';
+    value = ev.value;
+  } else if  (input_string.compare("KEY_L") == 0) {
+    type = 'S';
+    value = ev.value;
+    
+  } else if  (input_string.compare("KEY_K") == 0) {
+    type = 'W';
+    value = ev.value;
+    
+  } else if  (input_string.compare("KEY_J") == 0) {
+    type = 'N';
+    value = ev.value;
+    
+  } else if (input_string.compare("KEY_ESC") == 0) {
+    
+    
+    type = 'p';
+    value = ev.value;
+  
+  // input we arent interested in
+  }else {
       type = -1;
       value = 0;
   }
@@ -244,6 +300,9 @@ ControllerInput parse_ps4_input(struct input_event ev){
   return input;
   
 }
+
+
+
 
 ControllerInput parse_keyboard_input_CHIP8(struct input_event ev){
   
