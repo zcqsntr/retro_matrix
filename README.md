@@ -80,7 +80,7 @@ You should get some console output.
 ## Use instructions
 You need either a controller or a keyboard connected to run, not all controllers are supported but all keyboards should work. 
 
-To start the application press the start button (esc on keyboard), if start doesn't work try pressing random buttons as the input mapping might be slightly different on different controllers. (I'm working on keyboard support as well which should be more consistent across different setups). 
+To start the application press the start button (esc on keyboard), if start doesn't work try pressing random buttons as the input mapping might be slightly different on different controllers. 
 
 The controller button mappings are standard. For the keyboard, directions are w,a,s,d. Space is select (the A button on controller) and j,k,l are the remaining face buttons, with l being back (the B button on controller). 
 
