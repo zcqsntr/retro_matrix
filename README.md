@@ -75,7 +75,16 @@ where args are the arguments required to get the rgb-rpi demos working, e.g. I u
 ./run_retro_matrix --led-slowdown-gpio=4 --led-gpio-mapping=adafruit-hat
 ```
 
-You should get some console output. To start the application you need to connect a controller via bluetooth and press the start button, if start doesn't work try pressing random buttons as the input mapping might be slightly different on different controllers. (I'm working on keyboard support as well which should be more consistent across different setups)
+You should get some console output.
+
+## Use instructions
+You need either a controller or a keyboard connected to run, not all controllers are supported but all keyboards should work. 
+
+To start the application press the start button (esc on keyboard), if start doesn't work try pressing random buttons as the input mapping might be slightly different on different controllers. (I'm working on keyboard support as well which should be more consistent across different setups). 
+
+The controller button mappings are standard. For the keyboard, directions are w,a,s,d. Space is select (the A button on controller) and j,k,l are the remaining face buttons, with l being back (the B button on controller). 
+
+If anything doesn't work let me know and I'll try and fix it
 
 ## Dependencies:
 * [libevdev](https://www.freedesktop.org/wiki/Software/libevdev/)
