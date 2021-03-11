@@ -16,38 +16,66 @@ This is a C++ apllication that runs various cellular automata and retro games on
 * Langton's loop
 
 ## You will need
-* Raspberry Pi, preferably better than a Pi zero
-* [LED matrix](https://shop.pimoroni.com/products/rgb-led-matrix-panel?variant=3029531983882), preferably 64x64 
+* Raspberry Pi, preferably better than a Pi zero. Tested oon Pi3A, Pi4 and Pi0. All work although the 0 is quite laggy
+* [LED matrix](https://shop.pimoroni.com/products/rgb-led-matrix-panel?variant=3029531983882), 64x64 is currently the only supported size
 * A Nintendo Switch Pro controller, PS4 controller or it also works with one of these cheaper [controllers](https://www.amazon.co.uk/8BitDo-Wireless-Bluetooth-Controller-Powerful/dp/B083FJLVLH/ref=sr_1_17_sspa?dchild=1&keywords=8bitdo+controller&qid=1601051019&sr=8-17-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEzME5UMFlLRTVTMzVSJmVuY3J5cHRlZElkPUEwOTQwMTY2MkJWQURBNjhORUE0QSZlbmNyeXB0ZWRBZElkPUEwMjQ5OTMzMUZHSk1GRUFSNjg4NCZ3aWRnZXROYW1lPXNwX210ZiZhY3Rpb249Y2xpY2tSZWRpcmVjdCZkb05vdExvZ0NsaWNrPXRydWU=) 
 * (recommended) matrix hat or [bonnet](https://shop.pimoroni.com/products/adafruit-rgb-matrix-bonnet-for-raspberry-pi), so you don't have to wire it to the GPIO pins yourself 
-* (optional) 3D printer to print the case
+* (optional) 3D printer to print the [case](https://www.thingiverse.com/thing:4605737)
 * (optional) 5v fan to prevent overheating in the case
-* (very optional) iPad and Xcode if you want to try and get the paint application working
 
 ## Install instructions
 
-If you don't need to recompile it just try running:
+If you don't need to recompile follow these steps, if you do follow these and the ones below first install git and libevdev:
 
-./run_retro_matrix <args>
+```console
+sudo apt-get update
+sudo apt-get install git
+sudo apt-get install -y libevdev-tools
+```
 
-where args are the arguments required to get the rgb-rpi demos working, e.g. I use 
+then create a directory and inside that directory run
 
-./run_retro_matrix --led-slowdown-gpio=4 --led-gpio-mapping=adafruit-hat
-
-If you need to recompile:
+```console
 git clone https://github.com/zcqsntr/retro_matrix --recursive
+```
+
+If the application doesn't run after you've done this try the steps below. 
+
+If you need to recompile for any reason then you need to setup libevdev first: 
+
+```console
 sudo apt-get install autoconf
 sudo apt-get install libtool
-
 cd libevdev
-./autogen.sh this will install libevdev in the default location which is hardcoded in the Makefiles, if it is anywhere else app won't compile
 
-make (might not be needed)
-sudo make install
+./autogen.sh 
+./configure
+make
+make install
+```
+
+Then run my setup script which compiles everything and runs a command on the excecutable to reduce flickering. 
+
+```console
+
 cd ..
-make 
+./setup
+```
 
+## Run instructions
+Then to run the application you need to run (from the root retro_matrix directory)
 
+```console
+./run_retro_matrix <args>
+```
+
+where args are the arguments required to get the rgb-rpi demos working, e.g. I use on a Pi3 and Pi4
+
+```console
+./run_retro_matrix --led-slowdown-gpio=4 --led-gpio-mapping=adafruit-hat
+```
+
+You should get some console output. To start the application you need to connect a controller via bluetooth and press the start button, if start doesn't work try pressing random buttons as the input mapping might be slightly different on different controllers. (I'm working on keyboard support as well which should be more consistent across different setups)
 
 ## Dependencies:
 * [libevdev](https://www.freedesktop.org/wiki/Software/libevdev/)
