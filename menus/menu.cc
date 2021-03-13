@@ -55,7 +55,7 @@ void RetroMatrix::draw_menu(vector<Button> buttons){
   int current_selected = 0;
     
   rgb_matrix::Font font;
-  if (!font.LoadFont("../rpi-rgb-led-matrix/fonts/4x6.bdf")) {
+  if (!font.LoadFont("./rpi-rgb-led-matrix/fonts/4x6.bdf")) {
     fprintf(stderr, "Couldn't load font \n");
   
   }

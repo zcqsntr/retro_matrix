@@ -3,7 +3,7 @@
 #include "led-matrix.h"
 #include "retro_matrix.h"
 
-
+#include <algorithm>
 #include "graphics.h"
 #include "mylib.h"
 
@@ -157,7 +157,103 @@ int main(int argc, char *argv[]) {
     cout << "conts: " <<connected_contr<<endl;
     
     
+    Color white(255,255,255);
+    Color blue(100,150,255);
     
+    Point pos = Point{10,0};
+    
+    vector<vector<Point>> blues;
+    vector<Point> whites;
+       
+    
+    
+    
+    blues.push_back({Point{pos.row +15,pos.col +26}, Point{pos.row +15,pos.col +27}, Point{pos.row +15, pos.col +28}});
+    blues.push_back({Point{pos.row +14, pos.col +25}, Point{pos.row +14,pos.col +26}, Point{pos.row +14,pos.col +27}, Point{pos.row +14, pos.col +28}, Point{pos.row +14, pos.col +29}});
+    
+    for(int i = 13; i >1; i--){
+      whites.push_back(Point{pos.row + i, pos.col +27});
+      //blues.push_back({Point{pos.row + i, pos.col +25}, Point{pos.row + i, pos.col +26}, Point{pos.row + i, pos.col +28}, Point{pos.row + i, pos.col +29}});
+    }
+    
+    for(int i = 0; i < 7; i++){
+      whites.push_back(Point{pos.row + 3 + i, pos.col + 26 - i});
+    }
+    
+    for(int i = 0; i < 6; i++){
+      whites.push_back(Point{pos.row + 8 - i, pos.col + 19 - i});
+    }
+    
+    for (int i = 0; i < 12; i++ ){
+      whites.push_back(Point{pos.row + 2 + i, pos.col + 13});
+    }
+    
+    for (int i = 0; i < 11; i++ ){
+      whites.push_back(Point{pos.row + 13 - i, pos.col + 13 - i});
+    }
+    
+    for (int i = 0; i < 14; i++ ){
+      whites.push_back(Point{pos.row + 2 + i, pos.col + 2});
+    }
+    
+    for(int i = 0; i < 2; i++){
+      for(auto point: blues[i]) {
+        SetPixel(canvas, point, blue);
+      }
+      usleep(25 * 1000);
+    }
+    
+    for(int i = 0; i < whites.size() - 2; i++) {
+      Point point = whites[i];
+      
+                      
+      if(i == whites.size()-3) {
+        blues.push_back({Point{point.row -1, point.col }, Point{point.row-2, point.col }, Point{point.row -1, point.col-1 }, Point{point.row-2, point.col-1 }, Point{point.row -1, point.col+1 }, Point{point.row-2, point.col+1 }, 
+                        Point{point.row +1, point.col }, Point{point.row+2, point.col }, Point{point.row +1, point.col-1 }, Point{point.row+2, point.col-1 }, Point{point.row +1, point.col+1 }, Point{point.row+2, point.col+1 }, 
+                        Point{point.row, point.col-1 }, Point{point.row , point.col-2 }, Point{point.row +1, point.col-2 }, Point{point.row-1 , point.col-2 },
+                        Point{point.row, point.col+1 }, Point{point.row , point.col+2 }, Point{point.row +1, point.col+2 }, Point{point.row-1 , point.col+2 }, Point{point.row+2 , point.col+2 }, Point{point.row+2 , point.col-2 }
+                      });
+      } else {
+        blues.push_back({Point{point.row -1, point.col }, Point{point.row-2, point.col }, Point{point.row -1, point.col-1 }, Point{point.row-2, point.col-1 }, Point{point.row -1, point.col+1 }, Point{point.row-2, point.col+1 }, 
+                        Point{point.row +1, point.col }, Point{point.row+2, point.col }, Point{point.row +1, point.col-1 }, Point{point.row+2, point.col-1 }, Point{point.row +1, point.col+1 }, Point{point.row+2, point.col+1 }, 
+                        Point{point.row, point.col-1 }, Point{point.row , point.col-2 }, Point{point.row +1, point.col-2 }, Point{point.row-1 , point.col-2 },
+                        Point{point.row, point.col+1 }, Point{point.row , point.col+2 }, Point{point.row +1, point.col+2 }, Point{point.row-1 , point.col+2 }
+                      });
+      }
+      
+    }
+    
+    rgb_matrix::Font font;
+    if (!font.LoadFont("./rpi-rgb-led-matrix/fonts/4x6.bdf")) {
+      fprintf(stderr, "Couldn't load font \n");
+    
+    }
+    
+    draw_text(canvas, font, buttons[i].position.row + font.baseline(),  buttons[i].position.col, selected_color, bg_color, (char *)buttons[i].label.c_str(), letter_spacing);
+    
+    
+    
+    for(int i = 0; i < blues.size(); i++){
+      for(const Point point: blues[i]) {
+        
+        // only set the blue pixels that havent already been set to white
+        bool set = true;
+        for (int j = 0; j<i; j++){
+          if(whites[j].row == point.row && whites[j].col == point.col) {
+            set = false;
+          }
+
+        }
+        
+        if (set) {
+          SetPixel(canvas, point, blue);
+        }
+      }
+      
+      
+      SetPixel(canvas, whites[i],white);
+      usleep(25 * 1000);
+    }
     
     while (connected_contr>0)  {
      
