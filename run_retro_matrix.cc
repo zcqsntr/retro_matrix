@@ -160,7 +160,7 @@ int main(int argc, char *argv[]) {
     Color white(255,255,255);
     Color blue(100,150,255);
     
-    Point pos = Point{10,0};
+    Point pos = Point{5,18};
     
     vector<vector<Point>> blues;
     vector<Point> whites;
@@ -223,16 +223,7 @@ int main(int argc, char *argv[]) {
       
     }
     
-    rgb_matrix::Font font;
-    if (!font.LoadFont("./rpi-rgb-led-matrix/fonts/4x6.bdf")) {
-      fprintf(stderr, "Couldn't load font \n");
-    
-    }
-    
-    draw_text(canvas, font, buttons[i].position.row + font.baseline(),  buttons[i].position.col, selected_color, bg_color, (char *)buttons[i].label.c_str(), letter_spacing);
-    
-    
-    
+
     for(int i = 0; i < blues.size(); i++){
       for(const Point point: blues[i]) {
         
@@ -252,11 +243,38 @@ int main(int argc, char *argv[]) {
       
       
       SetPixel(canvas, whites[i],white);
-      usleep(25 * 1000);
+      usleep(10 * 1000);
     }
     
+    rgb_matrix::Font brand_font;
+    if (!brand_font.LoadFont("./rpi-rgb-led-matrix/fonts/5x7.bdf")) {
+      fprintf(stderr, "Couldn't load font \n");
+    
+    }
+    int letter_spacing = 0;
+    Color c1(150, 0, 255);
+    Color c2(70, 0, 150);
+    draw_text(canvas, brand_font, 23 + brand_font.baseline(),  5, blue, Color{0,0,0}, "NEYTH MAKES", letter_spacing);
+    
+    rgb_matrix::Font font;
+    if (!font.LoadFont("./rpi-rgb-led-matrix/fonts/4x6.bdf")) {
+      fprintf(stderr, "Couldn't load font \n");
+    
+    }
+    
+    int frame = 0;
+    bool bright = true;
     while (connected_contr>0)  {
-     
+ 
+      if (frame%1000000 == 0) {
+        
+        if(bright) {
+          draw_text(canvas, font, 32 + 3*font.baseline(), 10, c1 , Color{0,0,0}, "PRESS START!", letter_spacing);
+        } else {
+          draw_text(canvas, font, 32 + 3*font.baseline(), 10, c2 , Color{0,0,0}, "PRESS START!", letter_spacing);
+        }
+        bright = !bright;
+      }
       inputs = get_inputs_from_ps4(matrix.dev);
      
       for(const auto &input: inputs){
@@ -265,6 +283,7 @@ int main(int argc, char *argv[]) {
         cout << inputs.size() << endl;
         if(input.type == 'p'){
             cout <<"size: " <<matrix.menu_structure["MAIN"].size()<< endl;
+      
             matrix.draw_menu(matrix.menu_structure["MAIN"]);
             
         } else if(input.type == 'D'){ // disconnect
@@ -272,7 +291,9 @@ int main(int argc, char *argv[]) {
           connected_contr -= 1;
         }
       }
+      frame += 1;
     }
+    
   
           // Using the canvas.
     

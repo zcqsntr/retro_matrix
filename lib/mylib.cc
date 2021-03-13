@@ -374,8 +374,8 @@ void draw_buttons(Canvas *canvas, vector <Button> buttons, Font &font, Color sel
                             
       if(buttons[i].is_selected){
         // border
-        //DrawRect(canvas, buttons[i].position.row -1, buttons[i].position.col -1, 6, 20, highlight_color);
-        draw_text(canvas, font, buttons[i].position.row + font.baseline(),  buttons[i].position.col, selected_color, bg_color, (char *)buttons[i].label.c_str(), letter_spacing);
+        //DrawRect(canvas, buttons[i].s bg_color, (char *)buttons[i].label.c_str(), letter_spacing);
+        draw_text(canvas, font,  buttons[i].position.row + font.baseline(), buttons[i].position.col, selected_color, bg_color, (char *)buttons[i].label.c_str(), letter_spacing);
       } else {
         //DrawRect(canvas, buttons[i].position.row -1, buttons[i].position.col -1, 6, 20, bg_color);
         draw_text(canvas, font,  buttons[i].position.row + font.baseline(), buttons[i].position.col, unselected_color, bg_color, (char *)buttons[i].label.c_str(), letter_spacing);
