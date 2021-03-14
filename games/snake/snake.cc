@@ -261,7 +261,7 @@ void RetroMatrix::one_p_snake() {
  
   // load high score 
   string hs;
-  ifstream myfile ("/home/pi/Desktop/retro_matrix/games/snake/high_score.txt");
+  ifstream myfile ("./games/snake/high_score.txt");
   if (myfile.is_open())
   {
     getline (myfile,hs);
@@ -286,7 +286,7 @@ void RetroMatrix::one_p_snake() {
   
   
   rgb_matrix::Font font;
-  if (!font.LoadFont("/home/pi/Desktop/LED_matrix/rpi-rgb-led-matrix/fonts/4x6.bdf")) {
+  if (!font.LoadFont("./rpi-rgb-led-matrix/fonts/4x6.bdf")) {
     fprintf(stderr, "Couldn't load font \n");
   
   }
@@ -420,7 +420,7 @@ void RetroMatrix::one_p_snake() {
     
     
     if(check_collision(snake, boundaries, min_row, max_row, min_col, max_col)) {
-      ofstream myfile ("/home/pi/Desktop/retro_matrix/games/snake/high_score.txt");
+      ofstream myfile ("./games/snake/high_score.txt");
         if (myfile.is_open())
         {
           myfile << high_score;
@@ -529,7 +529,7 @@ void RetroMatrix::two_p_snake() {
   
   int letter_spacing = 0;
   rgb_matrix::Font font;
-  if (!font.LoadFont("/home/pi/Desktop/LED_matrix/rpi-rgb-led-matrix/fonts/4x6.bdf")) {
+  if (!font.LoadFont("./rpi-rgb-led-matrix/fonts/4x6.bdf")) {
     fprintf(stderr, "Couldn't load font \n");
   
   }

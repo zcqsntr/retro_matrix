@@ -179,7 +179,7 @@ int RetroMatrix::run_loop(){
   // parse rules file
   string rule;
   vector<string> rules;
-  ifstream myfile ("/home/pi/Desktop/retro_matrix/cellular_automata/langtons_loop/rules.txt");
+  ifstream myfile ("./cellular_automata/langtons_loop/rules.txt");
   if (myfile.is_open())
   {
     while(getline(myfile, rule)){
@@ -207,7 +207,7 @@ int RetroMatrix::run_loop(){
   
   
   rgb_matrix::Font font;
-  if (!font.LoadFont("/home/pi/Desktop/LED_matrix/rpi-rgb-led-matrix/fonts/4x6.bdf")) {
+  if (!font.LoadFont("./rpi-rgb-led-matrix/fonts/4x6.bdf")) {
     fprintf(stderr, "Couldn't load font \n");
   
   }

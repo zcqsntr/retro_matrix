@@ -194,7 +194,7 @@ int RetroMatrix::run_R30(){
   
   
   rgb_matrix::Font font;
-  if (!font.LoadFont("/home/pi/Desktop/LED_matrix/rpi-rgb-led-matrix/fonts/4x6.bdf")) {
+  if (!font.LoadFont("./rpi-rgb-led-matrix/fonts/4x6.bdf")) {
     fprintf(stderr, "Couldn't load font \n");
   
   }

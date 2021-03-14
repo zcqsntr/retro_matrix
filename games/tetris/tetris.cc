@@ -330,7 +330,7 @@ int RetroMatrix::run_tetris() {
          
 
   rgb_matrix::Font font;
-  if (!font.LoadFont("/home/pi/Desktop/LED_matrix/rpi-rgb-led-matrix/fonts/4x6.bdf")) {
+  if (!font.LoadFont("./rpi-rgb-led-matrix/fonts/4x6.bdf")) {
     fprintf(stderr, "Couldn't load font \n");
   
   }
@@ -482,7 +482,7 @@ int RetroMatrix::run_tetris() {
   
   // load high score 
   string hs;
-  ifstream myfile ("/home/pi/Desktop/retro_matrix/games/tetris/high_score.txt");
+  ifstream myfile ("./games/tetris/high_score.txt");
   if (myfile.is_open())
   {
     getline (myfile,hs);
@@ -693,7 +693,8 @@ int RetroMatrix::run_tetris() {
        rot = 0;
        rotation = 0;
        if(has_landed(board, active_piece)) {
-         ofstream myfile ("/home/pi/Desktop/retro_matrix/games/tetris/high_score.txt");
+         
+         ofstream myfile ("./games/tetris/high_score.txt");
           if (myfile.is_open())
           {
             myfile << high_score;
