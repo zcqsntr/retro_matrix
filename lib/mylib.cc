@@ -6,6 +6,7 @@
 #include "libevdev.h"
 #include <math.h>
 #include <iostream>
+#include <unistd.h>
 
 using rgb_matrix::Font;
 using rgb_matrix::Canvas;
@@ -42,6 +43,116 @@ ActionButton::ActionButton(Point p, string l, bool s, void (*tf)()): Button(p, l
 }
 */
 
+void draw_logo(Canvas* canvas, Point pos, int scale, Color blue, Color white) {
+    
+    vector<vector<Point>> blues;
+    vector<Point> whites;
+   
+    for(int i = 0; i < 12*scale; i++){
+      vector<Point> ps;
+      for(int row = 0; row < scale; row++){
+          for(int col = 0; col<scale; col++){
+            whites.push_back(Point{pos.row + 13*scale - i+row, pos.col +27*scale +col});
+        }
+      }
+      
+      //whites.push_back(ps);
+      
+      //blues.push_back({Point{pos.row + i, pos.col +25}, Point{pos.row + i, pos.col +26}, Point{pos.row + i, pos.col +28}, Point{pos.row + i, pos.col +29}});
+    }
+    
+    for(int i = 0; i < 7*scale; i++){
+      for(int row = 0; row < scale; row++){
+          for(int col = 0; col<scale; col++){
+            whites.push_back(Point{pos.row + 2*scale + i - row, pos.col + 27*scale- i + col});
+        }
+      }
+        
+      
+    }
+    
+    for(int i = 0; i < 7*scale; i++){
+      for(int row = 0; row < scale; row++){
+          for(int col = 0; col<scale; col++){
+            if(!(i ==0 && row == scale -1 && col == scale-1)) {
+              whites.push_back(Point{pos.row + 9*scale +row - i, pos.col + 20*scale +col - i});
+            }
+        }
+      }
+    }
+    
+    for (int i = 0; i < 12*scale; i++ ){
+      for(int row = 0; row < scale; row++){
+          for(int col = 0; col<scale; col++){
+            if(!(i == 12*scale -1 && row == scale -1)){
+              whites.push_back(Point{pos.row + 2*scale + i +row, pos.col + 13*scale + col});
+            }
+            
+      }
+    }
+    }
+    
+    for (int i = 0; i < 11*scale; i++ ){
+      for(int row = 0; row < scale; row++){
+          for(int col = 0; col<scale; col++){
+        whites.push_back(Point{pos.row + 13*scale - i +row, pos.col + 13*scale - i + col});
+      }
+    }
+    }
+    
+    for (int i = 0; i < 14*scale; i++ ){
+      for(int row = 0; row < scale; row++){
+          for(int col = 0; col<scale; col++){
+            if (pos.row + 2*scale +row + i <= pos.row +15*scale) {
+            whites.push_back(Point{pos.row + 2*scale +row + i, pos.col + 2*scale + col});
+          }
+      }
+    }
+    }
+      
+      for(auto point: whites){
+        vector<Point> ps;
+      
+        
+        for (int row = -2*scale; row < 2*scale+1; row++){
+          for(int col = -2*scale; col < 2*scale+1; col++){
+            if(row*row + col*col <= 4*scale*scale +1 && point.row + row <= pos.row + 15*scale) {
+              ps.push_back(Point{point.row + row, point.col + col});
+            }
+          }
+        }
+        blues.push_back(ps);
+      }
+      
+      
+    
+    
+
+    for(int i = 0; i < blues.size(); i++){
+      for(const Point point: blues[i]) {
+        
+        // only set the blue pixels that havent already been set to white
+        bool set = true;
+        for (int j = 0; j<i; j++){
+          
+          
+          if(whites[j].row == point.row && whites[j].col == point.col) {
+            set = false;
+          }
+
+        }
+        
+        if (set) {
+          SetPixel(canvas, point, blue);
+        }
+      }
+      
+      
+      SetPixel(canvas, whites[i],white);
+      usleep(10/(scale*scale) * 1000);
+    }
+  
+} 
 
 int get_selected_button(vector<Button> buttons){
 	for(int i = 0; i < buttons.size(); i++){

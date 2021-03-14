@@ -61,6 +61,8 @@ struct ControllerInput {
   
 };
 
+void draw_logo(Canvas* canvas, Point pos, int scale, Color blue, Color white);
+
 void draw_buttons(Canvas *canvas, vector <Button> buttons, Font &font, Color selected_color, Color unselected_color);
 
 int get_selected_button(vector<Button> buttons);
