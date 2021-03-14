@@ -112,11 +112,13 @@ int main(int argc, char *argv[]) {
     
     int flash_t = 1000;
     draw_text(canvas, font, start_pos.row + 3*font.baseline(), start_pos.col, c1 , Color{0,0,0}, "PRESS START!", letter_spacing);
+    auto t = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     while (connected_contr==0) { // while controller disconnected 
-      auto t = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
       
-        if (t%flash_t== 0) {
-         
+      auto new_t = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+        
+        if (new_t - t > flash_t) {
+          t = new_t;
           bright = !bright;
           if(bright) {
            
@@ -209,9 +211,11 @@ int main(int argc, char *argv[]) {
     
     while (connected_contr>0)  {
 
-      auto t = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-      if (t%flash_t== 0) {
-        
+      
+      auto new_t = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+        if (new_t - t > flash_t) {
+          t = new_t;
         if(bright) {
           draw_text(canvas, font, start_pos.row  + 3*font.baseline(), start_pos.col , c1 , Color{0,0,0}, "PRESS START!", letter_spacing);
         } else {
