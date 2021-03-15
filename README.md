@@ -88,7 +88,7 @@ If anything doesn't work let me know and I'll try and fix it
 
 ## Dependencies:
 * [libevdev](https://www.freedesktop.org/wiki/Software/libevdev/)
-* pip install pytz (for weather)
+* pip install pytz  and  pip install apds9960 (for weather)
 
 
 ![IMG_20200924_182925](https://user-images.githubusercontent.com/33317183/94297181-025dd780-ff5c-11ea-822f-bd70cae16fc4.jpg)
