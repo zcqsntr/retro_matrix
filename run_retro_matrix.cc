@@ -129,20 +129,22 @@ int main(int argc, char *argv[]) {
           }
         }
         
-        cout << "before loop" << endl;
+       
         
         for (const auto & entry : std::filesystem::directory_iterator(path)){
-          cout << "inside loop" << endl;
+   
           if(regex_match((char *)entry.path().c_str(), regex("/dev/input/event[0-9]+")) && !count(devices.begin(), devices.end(), ((string)entry.path()).back())){ //check if device has already been looked at
               
-              cout << "found input event file" << endl;
+              
             
               struct libevdev *dv = NULL;
               int fd = open((char *)entry.path().c_str() , O_RDONLY|O_NONBLOCK);
               int rc = libevdev_new_from_fd(fd, &dv);
               
-              
-              if(rc == 0) { // on success
+              if (rc < 0) {
+                      fprintf(stderr, "Failed to init libevdev (%s)\n", strerror(-rc));
+                      
+              }else if(rc == 0) { // on success
                 cout << entry << fd<<rc << endl;
               printf("Input device name: \"%s\"\n", libevdev_get_name(dv));
                       printf("Input device ID: bus %#x vendor %#x product %#x\n",
