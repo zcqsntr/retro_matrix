@@ -129,11 +129,13 @@ int main(int argc, char *argv[]) {
           }
         }
         
+        cout << "before loop" << endl;
+        
         for (const auto & entry : std::filesystem::directory_iterator(path)){
-         
+          cout << "inside loop" << endl;
           if(regex_match((char *)entry.path().c_str(), regex("/dev/input/event[0-9]+")) && !count(devices.begin(), devices.end(), ((string)entry.path()).back())){ //check if device has already been looked at
               
-            
+              cout << "found input event file" << endl;
             
               struct libevdev *dv = NULL;
               int fd = open((char *)entry.path().c_str() , O_RDONLY|O_NONBLOCK);
@@ -203,7 +205,7 @@ int main(int argc, char *argv[]) {
         //cout << connected_contr << endl;
     }
     
-    cout << "conts: " <<connected_contr<<endl;
+    cout << "controllers connected: " <<connected_contr<<endl;
     
     
    
