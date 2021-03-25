@@ -140,7 +140,7 @@ int main(int argc, char *argv[]) {
               struct libevdev *dv = NULL;
               int fd = open((char *)entry.path().c_str() , O_RDONLY|O_NONBLOCK);
               int rc = libevdev_new_from_fd(fd, &dv);
-              
+           
               if (rc < 0) {
                       fprintf(stderr, "Failed to init libevdev (%s)\n", strerror(-rc));
                       cout << entry << fd<<rc << endl;
