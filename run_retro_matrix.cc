@@ -143,7 +143,7 @@ int main(int argc, char *argv[]) {
               
               if (rc < 0) {
                       fprintf(stderr, "Failed to init libevdev (%s)\n", strerror(-rc));
-                      
+                      cout << entry << fd<<rc << endl;
               }else if(rc == 0) { // on success
                 cout << entry << fd<<rc << endl;
               printf("Input device name: \"%s\"\n", libevdev_get_name(dv));
