@@ -63,7 +63,7 @@ cd ..
 ```
 
 ## Run instructions
-Then to run the application you need to run (from the root retro_matrix directory)
+Then to run the application you need to run (from the root retro_matrix directory), do not use sudo!
 
 ```console
 ./run_retro_matrix <args>
@@ -75,7 +75,7 @@ where args are the arguments required to get the rgb-rpi demos working, e.g. I u
 ./run_retro_matrix --led-slowdown-gpio=4 --led-gpio-mapping=adafruit-hat
 ```
 
-You should get some console output.
+You should get some console output, and a start screen.
 
 ## Use instructions
 You need either a controller or a keyboard connected to run, not all controllers are supported but all keyboards should work. 
